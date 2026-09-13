@@ -291,18 +291,36 @@ export default function HockeyTracker() {
         let matchRows = matchesRes.data || [];
         let entryRows = entriesRes.data || [];
 
+        if (playersRes.error) {
+          console.error('Supabase players select error:', playersRes.error);
+          setError(`Не удалось прочитать таблицу players: ${playersRes.error.message}`);
+        }
+
         // First run ever: table is empty, seed it from the group's original spreadsheet history.
-        if (playerRows.length === 0) {
-          await supabase.from('players').insert(DEFAULT_PLAYERS.map((name) => ({ name })));
+        if (playerRows.length === 0 && !playersRes.error) {
+          const seedErrors = [];
+
+          const { error: pErr } = await supabase.from('players').insert(DEFAULT_PLAYERS.map((name) => ({ name })));
+          if (pErr) seedErrors.push(`players: ${pErr.message}`);
+
           for (let i = 0; i < SEED_MATCHES.length; i += 200) {
-            await supabase.from('matches').insert(SEED_MATCHES.slice(i, i + 200));
+            const { error: mErr } = await supabase.from('matches').insert(SEED_MATCHES.slice(i, i + 200));
+            if (mErr) { seedErrors.push(`matches: ${mErr.message}`); break; }
           }
+
           const seedEntryRows = SEED_ENTRIES.map((en) => ({
             id: en.id, player: en.player, date: en.date, goals: en.goals, assists: en.assists, match_id: en.matchId,
           }));
           for (let i = 0; i < seedEntryRows.length; i += 200) {
-            await supabase.from('entries').insert(seedEntryRows.slice(i, i + 200));
+            const { error: eErr } = await supabase.from('entries').insert(seedEntryRows.slice(i, i + 200));
+            if (eErr) { seedErrors.push(`entries: ${eErr.message}`); break; }
           }
+
+          if (seedErrors.length > 0) {
+            console.error('Supabase seeding errors:', seedErrors);
+            setError(`Не удалось сохранить исходные данные в базу (${seedErrors[0]}). Данные видны только в этом браузере — обновление страницы всё сбросит, пока не исправим права доступа в Supabase.`);
+          }
+
           playerRows = DEFAULT_PLAYERS.map((name) => ({ name }));
           matchRows = SEED_MATCHES;
           entryRows = seedEntryRows;
