@@ -881,6 +881,7 @@ export default function HockeyTracker() {
   const seasonWrapped = useMemo(() => {
     if (!currentSeason || seasonCountableEntries.length === 0) return null;
     const topScorer = seasonStats.leaderboard.find((p) => p.gp > 0) || null;
+    const topGoals = [...seasonStats.leaderboard].filter((p) => p.gp > 0).sort((a, b) => b.goals - a.goals)[0] || null;
     const topAssist = [...seasonStats.leaderboard].filter((p) => p.gp > 0).sort((a, b) => b.assists - a.assists)[0] || null;
     const bestGame = seasonCountableEntries.reduce((best, e) => {
       const pts = e.goals + e.assists;
@@ -910,7 +911,7 @@ export default function HockeyTracker() {
       });
     }
     const record = seasonTeamRecord(seasonEntries);
-    return { topScorer, topAssist, bestGame, totals, mostImproved, prevSeason, gamesCount: seasonGP, record };
+    return { topScorer, topGoals, topAssist, bestGame, totals, mostImproved, prevSeason, gamesCount: seasonGP, record };
   }, [currentSeason, seasonCountableEntries, seasonEntries, seasonStats, seasons, countableEntries, players, seasonGP]);
   const playerA = compareA && activeCareerPlayers.includes(compareA) ? compareA : activeCareerPlayers[0];
   const playerB = compareB && activeCareerPlayers.includes(compareB) ? compareB : activeCareerPlayers[1];
@@ -1470,6 +1471,18 @@ export default function HockeyTracker() {
                         <div style={{ textAlign: 'left' }}>
                           <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topScorer.player}</div>
                           <div style={{ fontSize: 12, color: PALETTE.gold }}>{seasonWrapped.topScorer.points} очков</div>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                  {seasonWrapped.topGoals && seasonWrapped.topGoals.goals > 0 && (
+                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                      <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Лучший снайпер</div>
+                      <button onClick={() => openProfile(seasonWrapped.topGoals.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                        <Avatar name={seasonWrapped.topGoals.player} color={colorFor(seasonWrapped.topGoals.player)} />
+                        <div style={{ textAlign: 'left' }}>
+                          <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topGoals.player}</div>
+                          <div style={{ fontSize: 12, color: PALETTE.red }}>{seasonWrapped.topGoals.goals} голов</div>
                         </div>
                       </button>
                     </div>
