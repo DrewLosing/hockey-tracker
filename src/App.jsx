@@ -319,29 +319,50 @@ export default function HockeyTracker() {
           setError(`Таблицы категорий/турниров/команд ещё не созданы — выполните schema_v2.sql в Supabase.`);
         }
 
-        // v2 migration: categories table empty means this project hasn't been upgraded
-        // to the category/tournament/team model yet. Rebuild matches+entries fully from
-        // the classified historical dataset (confirmed safe: no live data to preserve).
-        if (categoryRows.length === 0 && !categoriesRes.error) {
-          const seedErrors = [];
+        // Each reference table is seeded independently and is safe to retry on its own —
+        // if a previous attempt got partway through (e.g. categories landed but tournaments
+        // didn't), the next page load fills in exactly what's still missing.
+        const seedErrors = [];
 
-          const { error: catErr } = await supabase.from('categories').upsert(SEED_CATEGORIES.map((c) => ({
+        if (!categoriesRes.error && categoryRows.length === 0) {
+          const { error } = await supabase.from('categories').upsert(SEED_CATEGORIES.map((c) => ({
             id: c.id, name: c.name, counts_stats: c.countsStats, has_teams: c.hasTeams, has_tournament: c.hasTournament,
           })));
-          if (catErr) seedErrors.push(`categories: ${catErr.message}`);
+          if (error) seedErrors.push(`categories: ${error.message}`);
+          else {
+            const fresh = await supabase.from('categories').select('*');
+            categoryRows = fresh.data || [];
+          }
+        }
 
+        if (!categoriesRes.error && tournamentRows.length === 0) {
           for (let i = 0; i < SEED_TOURNAMENTS.length; i += 100) {
-            const { error: tErr } = await supabase.from('tournaments').upsert(SEED_TOURNAMENTS.slice(i, i + 100));
-            if (tErr) seedErrors.push(`tournaments batch ${i}: ${tErr.message}`);
+            const { error } = await supabase.from('tournaments').upsert(SEED_TOURNAMENTS.slice(i, i + 100));
+            if (error) seedErrors.push(`tournaments batch ${i}: ${error.message}`);
           }
-          for (let i = 0; i < SEED_TEAMS.length; i += 100) {
-            const { error: teErr } = await supabase.from('teams').upsert(SEED_TEAMS.slice(i, i + 100));
-            if (teErr) seedErrors.push(`teams batch ${i}: ${teErr.message}`);
-          }
-          const { error: pErr } = await supabase.from('players').upsert(DEFAULT_PLAYERS.map((name) => ({ name })));
-          if (pErr) seedErrors.push(`players: ${pErr.message}`);
+          const fresh = await supabase.from('tournaments').select('*');
+          tournamentRows = fresh.data || [];
+        }
 
-          // Full authoritative replace of matches/entries with the reclassified history.
+        if (!categoriesRes.error && teamRows.length === 0) {
+          for (let i = 0; i < SEED_TEAMS.length; i += 100) {
+            const { error } = await supabase.from('teams').upsert(SEED_TEAMS.slice(i, i + 100));
+            if (error) seedErrors.push(`teams batch ${i}: ${error.message}`);
+          }
+          const fresh = await supabase.from('teams').select('*');
+          teamRows = fresh.data || [];
+        }
+
+        if (!playersRes.error && playerRows.length === 0) {
+          const { error } = await supabase.from('players').upsert(DEFAULT_PLAYERS.map((name) => ({ name })));
+          if (error) seedErrors.push(`players: ${error.message}`);
+          const fresh = await supabase.from('players').select('*');
+          playerRows = fresh.data || [];
+        }
+
+        // Matches reference tournaments/teams by id, so only rebuild history once those
+        // are confirmed present — otherwise every match insert would fail on the foreign key.
+        if (!categoriesRes.error && entryRows.length === 0 && tournamentRows.length > 0 && teamRows.length > 0) {
           await supabase.from('entries').delete().neq('id', '__none__');
           await supabase.from('matches').delete().neq('id', '__none__');
 
@@ -350,65 +371,29 @@ export default function HockeyTracker() {
             own_team_id: m.ownTeamId, opponent_team_id: m.opponentTeamId, score_own: m.scoreOwn, score_opp: m.scoreOpp, stage: m.stage,
           }));
           for (let i = 0; i < matchRowsToInsert.length; i += 100) {
-            const { error: mErr } = await supabase.from('matches').upsert(matchRowsToInsert.slice(i, i + 100));
-            if (mErr) seedErrors.push(`matches batch ${i}: ${mErr.message}`);
+            const { error } = await supabase.from('matches').upsert(matchRowsToInsert.slice(i, i + 100));
+            if (error) seedErrors.push(`matches batch ${i}: ${error.message}`);
           }
 
           const entryRowsToInsert = SEED_ENTRIES.map((en) => ({
             id: en.id, player: en.player, date: en.date, goals: en.goals, assists: en.assists, match_id: en.matchId,
           }));
           for (let i = 0; i < entryRowsToInsert.length; i += 100) {
-            const { error: eErr } = await supabase.from('entries').upsert(entryRowsToInsert.slice(i, i + 100));
-            if (eErr) seedErrors.push(`entries batch ${i}: ${eErr.message}`);
+            const { error } = await supabase.from('entries').upsert(entryRowsToInsert.slice(i, i + 100));
+            if (error) seedErrors.push(`entries batch ${i}: ${error.message}`);
           }
 
-          if (seedErrors.length > 0) {
-            console.error('Supabase v2 migration errors:', seedErrors);
-            setError(`Не всё удалось перенести (${seedErrors[0]}). Обновите страницу через минуту.`);
-          }
-
-          const [freshPlayers, freshMatches, freshEntries, freshCategories, freshTournaments, freshTeams] = await Promise.all([
-            supabase.from('players').select('*'),
+          const [freshMatches, freshEntries] = await Promise.all([
             supabase.from('matches').select('*'),
             supabase.from('entries').select('*'),
-            supabase.from('categories').select('*'),
-            supabase.from('tournaments').select('*'),
-            supabase.from('teams').select('*'),
-          ]);
-          playerRows = freshPlayers.data || [];
-          matchRows = freshMatches.data || [];
-          entryRows = freshEntries.data || [];
-          categoryRows = freshCategories.data || [];
-          tournamentRows = freshTournaments.data || [];
-          teamRows = freshTeams.data || [];
-        } else if (entryRows.length === 0 && !playersRes.error) {
-          // categories already exist but entries are empty (shouldn't normally happen after
-          // v2 migration, but keep a safety net for a brand-new empty project).
-          const seedErrors = [];
-          const { error: pErr } = await supabase.from('players').upsert(DEFAULT_PLAYERS.map((name) => ({ name })));
-          if (pErr) seedErrors.push(`players: ${pErr.message}`);
-          const matchRowsToInsert = SEED_MATCHES.map((m) => ({
-            id: m.id, date: m.date, label: m.label, category_id: m.categoryId, tournament_id: m.tournamentId,
-            own_team_id: m.ownTeamId, opponent_team_id: m.opponentTeamId, score_own: m.scoreOwn, score_opp: m.scoreOpp, stage: m.stage,
-          }));
-          for (let i = 0; i < matchRowsToInsert.length; i += 100) {
-            const { error: mErr } = await supabase.from('matches').upsert(matchRowsToInsert.slice(i, i + 100));
-            if (mErr) seedErrors.push(`matches batch ${i}: ${mErr.message}`);
-          }
-          const entryRowsToInsert = SEED_ENTRIES.map((en) => ({
-            id: en.id, player: en.player, date: en.date, goals: en.goals, assists: en.assists, match_id: en.matchId,
-          }));
-          for (let i = 0; i < entryRowsToInsert.length; i += 100) {
-            const { error: eErr } = await supabase.from('entries').upsert(entryRowsToInsert.slice(i, i + 100));
-            if (eErr) seedErrors.push(`entries batch ${i}: ${eErr.message}`);
-          }
-          if (seedErrors.length > 0) setError(`Не всё удалось сохранить (${seedErrors[0]}).`);
-          const [freshMatches, freshEntries, freshPlayers] = await Promise.all([
-            supabase.from('matches').select('*'), supabase.from('entries').select('*'), supabase.from('players').select('*'),
           ]);
           matchRows = freshMatches.data || [];
           entryRows = freshEntries.data || [];
-          playerRows = freshPlayers.data || [];
+        }
+
+        if (seedErrors.length > 0) {
+          console.error('Supabase seeding errors:', seedErrors);
+          setError(`Не всё удалось сохранить в базу (${seedErrors[0]}). Обновите страницу через минуту — недостающее должно доехать.`);
         }
 
         const loadedPlayers = playerRows.map((r) => r.name);
