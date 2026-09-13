@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
 import { Trophy, TrendingUp, TrendingDown, Flame, Plus, X, Target, Users, Share2, Sparkles } from 'lucide-react';
 import { supabase } from './supabaseClient';
@@ -21,6 +21,7 @@ const PALETTE = {
 };
 
 const PLAYER_COLORS = [PALETTE.red, PALETTE.steel, PALETTE.gold, PALETTE.teal, PALETTE.purple];
+const CATEGORY_COLORS = [PALETTE.red, PALETTE.steel, PALETTE.gold, PALETTE.teal, PALETTE.purple];
 
 // Shared "every 50" milestone ladder used for the goals/assists/games club badges.
 const MILESTONES_50 = Array.from({ length: 30 }, (_, i) => (i + 1) * 50);
@@ -277,6 +278,7 @@ export default function HockeyTracker() {
   const [formNotice, setFormNotice] = useState(null);
   const [profilePlayer, setProfilePlayer] = useState(null);
   const [profileSeason, setProfileSeason] = useState(null);
+  const [profilePieMetric, setProfilePieMetric] = useState('points');
   const [compareA, setCompareA] = useState(null);
   const [compareB, setCompareB] = useState(null);
   const [shareNotice, setShareNotice] = useState(null);
@@ -929,6 +931,7 @@ export default function HockeyTracker() {
     setGoalInput('');
     setEditingProfile(false);
     setProfileEditError(null);
+    setProfilePieMetric('points');
     const bio = profiles[name] || {};
     setEditForm({
       name,
@@ -1053,6 +1056,11 @@ export default function HockeyTracker() {
     <div className="ht-app" style={{ background: PALETTE.navy, minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+        .ht-app, .ht-app *, .ht-app *::before, .ht-app *::after { box-sizing: border-box; }
+        .ht-app select, .ht-app input { min-width: 0; }
+        .ht-app input[type=number]::-webkit-outer-spin-button,
+        .ht-app input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .ht-app input[type=number] { -moz-appearance: textfield; }
         @media (max-width: 480px) {
           .ht-app { padding: 12px 8px 24px !important; }
           .ht-hero-seg { padding: 10px 12px !important; }
@@ -1349,6 +1357,13 @@ export default function HockeyTracker() {
                 ['Хет-трики', a.hatTricks, b.hatTricks],
                 ['Игры с 2+ очками', a.multiPointGames, b.multiPointGames],
               ];
+              const aByCat = Object.fromEntries(playerCategoryBreakdown(playerA).map((c) => [c.category.id, c.games]));
+              const bByCat = Object.fromEntries(playerCategoryBreakdown(playerB).map((c) => [c.category.id, c.games]));
+              categories.forEach((c) => {
+                const av = aByCat[c.id] || 0;
+                const bv = bByCat[c.id] || 0;
+                if (av > 0 || bv > 0) rows.push([c.name, av, bv]);
+              });
               return (
                 <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 20 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -2176,19 +2191,52 @@ export default function HockeyTracker() {
               </div>
             )}
 
-            {profilePlayer && playerCategoryBreakdown(profilePlayer).length > 0 && (
-              <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }} className="ht-panel">
-                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 8 }}>По категориям (за всё время)</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
-                  {playerCategoryBreakdown(profilePlayer).map((c) => (
-                    <div key={c.category.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: PALETTE.iceDim }}>{c.category.name}</span>
-                      <span>{c.games} игр{c.category.countsStats ? ` · ${c.goals}Г ${c.assists}П` : ''}</span>
-                    </div>
-                  ))}
+            {profilePlayer && playerCategoryBreakdown(profilePlayer).length > 0 && (() => {
+              const breakdown = playerCategoryBreakdown(profilePlayer);
+              const metricLabels = { points: 'Очки', goals: 'Голы', assists: 'Передачи', games: 'Игры' };
+              const pieData = breakdown.map((c) => ({ name: c.category.name, value: c[profilePieMetric] })).filter((d) => d.value > 0);
+              return (
+                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>По категориям (за всё время)</div>
+                  <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+                    {Object.entries(metricLabels).map(([key, label]) => (
+                      <button
+                        key={key}
+                        onClick={() => setProfilePieMetric(key)}
+                        style={{
+                          background: profilePieMetric === key ? PALETTE.red : 'none',
+                          border: `1px solid ${profilePieMetric === key ? PALETTE.red : PALETTE.panelLine}`,
+                          color: PALETTE.ice, borderRadius: 4, padding: '5px 10px', fontSize: 12, cursor: 'pointer',
+                        }}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  {pieData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={210}>
+                      <PieChart>
+                        <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={75} label={(d) => d.value}>
+                          {pieData.map((entry, i) => <Cell key={entry.name} fill={CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />)}
+                        </Pie>
+                        <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
+                        <Legend wrapperStyle={{ fontSize: 11 }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div style={{ fontSize: 12, color: PALETTE.iceDim, textAlign: 'center', padding: '20px 0' }}>Нет данных для этой метрики.</div>
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13, marginTop: 12 }}>
+                    {breakdown.map((c) => (
+                      <div key={c.category.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: PALETTE.iceDim }}>{c.category.name}</span>
+                        <span>{c.games} игр{c.category.countsStats ? ` · ${c.goals}Г ${c.assists}П` : ''}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
               <div className="ht-row" style={{ padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Последние игры</div>
