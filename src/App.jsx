@@ -51,7 +51,7 @@ function calcAge(birthDateIso) {
   const today = new Date();
   let age = today.getFullYear() - bd.getFullYear();
   const hadBirthdayThisYear = today.getMonth() > bd.getMonth()
-    || (today.getMonth() === bd.getMonth() && today.getDate() >= bd.getDate());
+      || (today.getMonth() === bd.getMonth() && today.getDate() >= bd.getDate());
   if (!hadBirthdayThisYear) age -= 1;
   return age;
 }
@@ -80,7 +80,7 @@ function computeTrend(p) {
 const DEFAULT_PLAYERS = ['Андрей', 'Валёк', 'Санёк', 'Санёк М.'];
 
 // Full history transcribed from the group's shared spreadsheet. Personal stat rows
-// ("entries") reference a shared "match" record,  so the same real-world game logged
+// ("entries") reference a shared "match" record, so the same real-world game logged
 // by two different friends counts once, not twice.
 const SEED_MATCHES = [{"id": "m1", "date": "2026-09-05", "label": "Игровая тренировка 05.09.2026"}, {"id": "m2", "date": "2026-09-11", "label": "Игровая тренировка 11.09.2026"}, {"id": "m3", "date": "2025-09-06", "label": "Игровая тренировка 06.09.2025"}, {"id": "m4", "date": "2025-09-13", "label": "Игровая тренировка 13.09.2025"}, {"id": "m5", "date": "2025-09-14", "label": "Игровая тренировка 14.09.2025"}, {"id": "m6", "date": "2025-09-21", "label": "Игровая тренировка 21.09.2025"}, {"id": "m7", "date": "2025-09-28", "label": "Игровая тренировка 28.09.2025"}, {"id": "m8", "date": "2025-10-03", "label": "Игровая тренировка 03.10.2025"}, {"id": "m9", "date": "2025-10-04", "label": "Игровая тренировка 04.10.2025"}, {"id": "m10", "date": "2025-10-11", "label": "Игровая тренировка 11.10.2025"}, {"id": "m11", "date": "2025-10-12", "label": "Игровая тренировка 12.10.2025"}, {"id": "m12", "date": "2025-10-17", "label": "Игровая тренировка 17.10.2025"}, {"id": "m13", "date": "2025-10-18", "label": "Игровая тренировка 18.10.2025"}, {"id": "m14", "date": "2025-10-25", "label": "Игровая тренировка 25.10.2025"}, {"id": "m15", "date": "2025-11-01", "label": "Игровая тренировка 01.11.2025"}, {"id": "m16", "date": "2025-11-04", "label": "Игровая тренировка 04.11.2025"}, {"id": "m17", "date": "2025-11-08", "label": "АХЛ Легион - Локомотив 6:3"}, {"id": "m18", "date": "2025-11-08", "label": "Игровая тренировка 08.11.2025"}, {"id": "m19", "date": "2025-11-15", "label": "АХЛ Легион - Мотор 4:5 б"}, {"id": "m20", "date": "2025-11-15", "label": "Игровая тренировка 15.11.2025"}, {"id": "m21", "date": "2025-11-16", "label": "УГО Легион - Аларм 5:4 б"}, {"id": "m22", "date": "2025-11-23", "label": "Игровая тренировка 23.11.2025"}, {"id": "m23", "date": "2025-11-25", "label": "Армия - МЧС 9:11"}, {"id": "m24", "date": "2025-11-29", "label": "АХЛ Легион - Доброфлот 1:3"}, {"id": "m25", "date": "2025-11-30", "label": "УГО Легион - Супротек 6:7 б"}, {"id": "m26", "date": "2025-12-05", "label": "Игровая тренировка 05.12.2025"}, {"id": "m27", "date": "2025-12-06", "label": "Игровая тренировка 06.12.2025"}, {"id": "m28", "date": "2025-12-12", "label": "АХЛ Легион - Спортландия 4:1"}, {"id": "m29", "date": "2025-12-13", "label": "Игровая тренировка 13.12.2025"}, {"id": "m30", "date": "2025-12-20", "label": "Игровая тренировка 20.12.2025"}, {"id": "m31", "date": "2025-12-25", "label": "Армия - МЧС 6:7"}, {"id": "m32", "date": "2025-12-27", "label": "Игровая тренировка 27.12.2025"}, {"id": "m33", "date": "2025-12-28", "label": "Легион - Тавричанка 7:6 б"}, {"id": "m34", "date": "2025-12-28", "label": "Легион - Шахтёр 2:12"}, {"id": "m35", "date": "2026-01-09", "label": "Легион - Шахтёр 0:5"}, {"id": "m36", "date": "2026-01-09", "label": "Легион - Тавричанка 8:4"}, {"id": "m37", "date": "2026-01-10", "label": "Игровая тренировка 10.01.2026"}, {"id": "m38", "date": "2026-01-16", "label": "Игровая тренировка 16.01.2026"}, {"id": "m39", "date": "2026-01-17", "label": "Игровая тренировка 17.01.2026"}, {"id": "m40", "date": "2026-01-18", "label": "Игровая тренировка 18.01.2026"}, {"id": "m41", "date": "2026-01-22", "label": "Игровая тренировка 22.01.2026"}, {"id": "m42", "date": "2026-01-23", "label": "Игровая тренировка 23.01.2026"}, {"id": "m43", "date": "2026-01-24", "label": "Игровая тренировка 24.01.2026"}, {"id": "m44", "date": "2026-01-27", "label": "АХЛ Легион - Локомотив 3:4 б"}, {"id": "m45", "date": "2026-01-30", "label": "Игровая тренировка 30.01.2026"}, {"id": "m46", "date": "2026-01-31", "label": "Игровая тренировка 31.01.2026"}, {"id": "m47", "date": "2026-02-06", "label": "Игровая тренировка 06.02.2026"}, {"id": "m48", "date": "2026-02-07", "label": "Игровая тренировка 07.02.2026"}, {"id": "m49", "date": "2026-02-08", "label": "НХЛ Восточник - Портер 3:13"}, {"id": "m50", "date": "2026-02-13", "label": "Игровая тренировка 13.02.2026"}, {"id": "m51", "date": "2026-02-18", "label": "Игровая тренировка 18.02.2026"}, {"id": "m52", "date": "2026-02-19", "label": "Игровая тренировка 19.02.2026"}, {"id": "m53", "date": "2026-02-20", "label": "Игровая тренировка 20.02.2026"}, {"id": "m54", "date": "2026-02-27", "label": "Игровая тренировка 27.02.2026"}, {"id": "m55", "date": "2026-02-28", "label": "Игровая тренировка 28.02.2026"}, {"id": "m56", "date": "2026-03-06", "label": "Игровая тренировка 06.03.2026"}, {"id": "m57", "date": "2026-03-07", "label": "Игровая тренировка 07.03.2026"}, {"id": "m58", "date": "2026-03-09", "label": "Игровая тренировка 09.03.2026"}, {"id": "m59", "date": "2026-03-14", "label": "Игровая тренировка 14.03.2026"}, {"id": "m60", "date": "2026-03-21", "label": "Игровая тренировка 21.03.2026"}, {"id": "m61", "date": "2026-03-22", "label": "Игровая тренировка 22.03.2026"}, {"id": "m62", "date": "2026-03-28", "label": "Игровая тренировка 28.03.2026"}, {"id": "m63", "date": "2026-03-28", "label": "Армия - Белые тигры 2:4"}, {"id": "m64", "date": "2026-03-30", "label": "АХЛ Легион - Росмет 3:4"}, {"id": "m65", "date": "2026-04-06", "label": "Игровая тренировка 06.04.2026"}, {"id": "m66", "date": "2026-04-11", "label": "Игровая тренировка 11.04.2026"}, {"id": "m67", "date": "2026-04-17", "label": "Игровая тренировка 17.04.2026"}, {"id": "m68", "date": "2026-04-25", "label": "Игровая тренировка 25.04.2026"}, {"id": "m69", "date": "2026-05-02", "label": "Армия - Аларм 4:3"}, {"id": "m70", "date": "2026-05-02", "label": "Армия - Липовцы 2:4"}, {"id": "m71", "date": "2026-05-02", "label": "Игровая тренировка 02.05.2026"}, {"id": "m72", "date": "2026-05-03", "label": "Армия - Росмет 3:7"}, {"id": "m73", "date": "2026-05-07", "label": "Игровая тренировка 07.05.2026"}, {"id": "m74", "date": "2026-05-17", "label": "Игровая тренировка 17.05.2026"}, {"id": "m75", "date": "2026-05-23", "label": "Армия - Вектор 8:4"}, {"id": "m76", "date": "2026-05-23", "label": "Армия - Фриведтранс 4:5"}, {"id": "m77", "date": "2026-05-23", "label": "Игровая тренировка 23.05.2026"}, {"id": "m78", "date": "2026-05-23", "label": "Армия - Аларм 4:8"}, {"id": "m79", "date": "2026-05-23", "label": "Армия - Росмет 4:8"}, {"id": "m80", "date": "2024-09-14", "label": "Игровая тренировка 14.09.2024"}, {"id": "m81", "date": "2024-09-18", "label": "Игровая тренировка 18.09.2024"}, {"id": "m82", "date": "2024-09-21", "label": "Легион - Акулы 1:9"}, {"id": "m83", "date": "2024-09-22", "label": "Игровая тренировка 22.09.2024"}, {"id": "m84", "date": "2024-09-25", "label": "Игровая тренировка 25.09.2024"}, {"id": "m85", "date": "2024-09-27", "label": "Игровая тренировка 27.09.2024"}, {"id": "m86", "date": "2024-09-28", "label": "Игровая тренировка 28.09.2024"}, {"id": "m87", "date": "2024-10-04", "label": "Игровая тренировка 04.10.2024"}, {"id": "m88", "date": "2024-10-05", "label": "Игровая тренировка 05.10.2024"}, {"id": "m89", "date": "2024-10-11", "label": "Игровая тренировка 11.10.2024"}, {"id": "m90", "date": "2024-10-12", "label": "Игровая тренировка 12.10.2024"}, {"id": "m91", "date": "2024-10-13", "label": "Игровая тренировка 13.10.2024"}, {"id": "m92", "date": "2024-10-16", "label": "Игровая тренировка 16.10.2024"}, {"id": "m93", "date": "2024-10-18", "label": "Игровая тренировка 18.10.2024"}, {"id": "m94", "date": "2024-10-19", "label": "Игровая тренировка 19.10.2024"}, {"id": "m95", "date": "2024-10-21", "label": "Игровая тренировка 21.10.2024"}, {"id": "m96", "date": "2024-10-26", "label": "АХЛ Легион - Супротек 1:9"}, {"id": "m97", "date": "2024-10-26", "label": "Игровая тренировка 26.10.2024"}, {"id": "m98", "date": "2024-10-30", "label": "АХЛ Легион - Росмет 3:4"}, {"id": "m99", "date": "2024-11-01", "label": "Игровая тренировка 01.11.2024"}, {"id": "m100", "date": "2024-11-02", "label": "Игровая тренировка 02.11.2024"}, {"id": "m101", "date": "2024-11-09", "label": "Игровая тренировка 09.11.2024"}, {"id": "m102", "date": "2024-11-16", "label": "Игровая тренировка 16.11.2024"}, {"id": "m103", "date": "2024-11-17", "label": "АХЛ Легион - Акулы ВМТП 3:4"}, {"id": "m104", "date": "2024-11-23", "label": "АХЛ Легион - Ледяный волки 8:6"}, {"id": "m105", "date": "2024-11-27", "label": "Игровая тренировка 27.11.2024"}, {"id": "m106", "date": "2024-11-30", "label": "Игровая тренировка 30.11.2024"}, {"id": "m107", "date": "2024-12-01", "label": "АХЛ Легион - Ледяный титаны 7:6"}, {"id": "m108", "date": "2024-12-13", "label": "Игровая тренировка 13.12.2024"}, {"id": "m109", "date": "2024-12-14", "label": "Игровая тренировка 14.12.2024"}, {"id": "m110", "date": "2024-12-18", "label": "Игровая тренировка 18.12.2024"}, {"id": "m111", "date": "2024-12-20", "label": "Игровая тренировка 20.12.2024"}, {"id": "m112", "date": "2024-12-21", "label": "Игровая тренировка 21.12.2024"}, {"id": "m113", "date": "2024-12-28", "label": "Игровая тренировка 28.12.2024"}, {"id": "m114", "date": "2025-01-11", "label": "Игровая тренировка 11.01.2025"}, {"id": "m115", "date": "2025-01-17", "label": "Игровая тренировка 17.01.2025"}, {"id": "m116", "date": "2025-01-18", "label": "Игровая тренировка 18.01.2025"}, {"id": "m117", "date": "2025-01-24", "label": "Игровая тренировка 24.01.2025"}, {"id": "m118", "date": "2025-01-25", "label": "Игровая тренировка 25.01.2025"}, {"id": "m119", "date": "2025-01-26", "label": "Игровая тренировка 26.01.2025"}, {"id": "m120", "date": "2025-01-29", "label": "Игровая тренировка 29.01.2025"}, {"id": "m121", "date": "2025-02-01", "label": "Игровая тренировка 01.02.2025"}, {"id": "m122", "date": "2025-02-07", "label": "Игровая тренировка 07.02.2025"}, {"id": "m123", "date": "2025-02-08", "label": "АХЛ Легион - Мотор 4:1"}, {"id": "m124", "date": "2025-02-08", "label": "Игровая тренировка 08.02.2025"}, {"id": "m125", "date": "2025-02-12", "label": "Игровая тренировка 12.02.2025"}, {"id": "m126", "date": "2025-02-14", "label": "Игровая тренировка 14.02.2025"}, {"id": "m127", "date": "2025-02-15", "label": "Легион - Ветераны 2:7 турнир 35+"}, {"id": "m128", "date": "2025-02-15", "label": "Легион - Вектор 4:3  турнир 35+"}, {"id": "m129", "date": "2025-02-16", "label": "Легион - Каскад 0:4  турнир 35+"}, {"id": "m130", "date": "2025-03-01", "label": "АХЛ Легион - Росмет 5:3"}, {"id": "m131", "date": "2025-03-02", "label": "УГО Легион - Ветераны 0:4"}, {"id": "m132", "date": "2025-03-12", "label": "Игровая тренировка 12.03.2025"}, {"id": "m133", "date": "2025-03-13", "label": "товарняк с ДВЖД 3:6"}, {"id": "m134", "date": "2025-03-15", "label": "Игровая тренировка 15.03.2025"}, {"id": "m135", "date": "2025-03-16", "label": "УГО Легион - Водострой 5:4"}, {"id": "m136", "date": "2025-03-22", "label": "Игровая тренировка 22.03.2025"}, {"id": "m137", "date": "2025-03-29", "label": "Игровая тренировка 29.03.2025"}, {"id": "m138", "date": "2025-04-05", "label": "Игровая тренировка 05.04.2025"}, {"id": "m139", "date": "2025-04-06", "label": "УГО Легион - Вектор 4:3"}, {"id": "m140", "date": "2025-04-19", "label": "Игровая тренировка 19.04.2025"}, {"id": "m141", "date": "2025-04-26", "label": "Игровая тренировка 26.04.2025"}, {"id": "m142", "date": "2025-05-03", "label": "Игровая тренировка 03.05.2025"}, {"id": "m143", "date": "2025-05-04", "label": "УГО Легион - Каскад 5:1"}, {"id": "m144", "date": "2025-05-08", "label": "УГО Легион - Шахтер 6:3"}, {"id": "m145", "date": "2025-05-10", "label": "Игровая тренировка 10.05.2025"}, {"id": "m146", "date": "2025-05-17", "label": "Игровая тренировка 17.05.2025"}, {"id": "m147", "date": "2025-05-24", "label": "Вектор - Аларм 4:3"}, {"id": "m148", "date": "2025-05-24", "label": "Вектор - Приморье 5:6"}, {"id": "m149", "date": "2025-05-24", "label": "Игровая тренировка 24.05.2025"}, {"id": "m150", "date": "2025-05-25", "label": "Вектор - Росмет 6:5"}, {"id": "m151", "date": "2025-05-27", "label": "Игровая тренировка 27.05.2025"}, {"id": "m152", "date": "2025-05-29", "label": "Игровая тренировка 29.05.2025"}, {"id": "m153", "date": "2023-09-30", "label": "Игровая тренировка 30.09.2023"}, {"id": "m154", "date": "2023-10-07", "label": "Игровая тренировка 07.10.2023"}, {"id": "m155", "date": "2023-10-08", "label": "Игровая тренировка 08.10.2023"}, {"id": "m156", "date": "2023-10-09", "label": "Игровая тренировка 09.10.2023"}, {"id": "m157", "date": "2023-10-14", "label": "Игровая тренировка 14.10.2023"}, {"id": "m158", "date": "2023-10-28", "label": "Игровая тренировка 28.10.2023"}, {"id": "m159", "date": "2023-10-31", "label": "Игровая тренировка 31.10.2023"}, {"id": "m160", "date": "2023-11-04", "label": "Игровая тренировка 04.11.2023"}, {"id": "m161", "date": "2023-11-05", "label": "товарняк СУПРОТЕК"}, {"id": "m162", "date": "2023-11-07", "label": "Игровая тренировка 07.11.2023"}, {"id": "m163", "date": "2023-11-11", "label": "Игровая тренировка 11.11.2023"}, {"id": "m164", "date": "2023-11-12", "label": "товарняк СУПРОТЕК"}, {"id": "m165", "date": "2023-11-14", "label": "товарняк ВОДОСТРОЙ"}, {"id": "m166", "date": "2023-11-25", "label": "Игровая тренировка 25.11.2023"}, {"id": "m167", "date": "2023-12-02", "label": "Игровая тренировка 02.12.2023"}, {"id": "m168", "date": "2023-12-03", "label": "УГО Шахтер Липовцы 0:8"}, {"id": "m169", "date": "2023-12-09", "label": "Игровая тренировка 09.12.2023"}, {"id": "m170", "date": "2023-12-10", "label": "Игровая тренировка 10.12.2023"}, {"id": "m171", "date": "2023-12-13", "label": "тренировка против Ветеранов"}, {"id": "m172", "date": "2023-12-16", "label": "Игровая тренировка 16.12.2023"}, {"id": "m173", "date": "2023-12-17", "label": "УГО Витязь 2:13"}, {"id": "m174", "date": "2023-12-23", "label": "Игровая тренировка 23.12.2023"}, {"id": "m175", "date": "2023-12-30", "label": "Игровая тренировка 30.12.2023"}, {"id": "m176", "date": "2024-01-13", "label": "Игровая тренировка 13.01.2024"}, {"id": "m177", "date": "2024-01-27", "label": "Факел - Змеинка 1:0"}, {"id": "m178", "date": "2024-01-27", "label": "Игровая тренировка 27.01.2024"}, {"id": "m179", "date": "2024-01-28", "label": "Факел - Фанзавод 1:0"}, {"id": "m180", "date": "2024-01-28", "label": "УГО Ветераны 4:12"}, {"id": "m181", "date": "2024-02-03", "label": "Игровая тренировка 03.02.2024"}, {"id": "m182", "date": "2024-02-10", "label": "Игровая тренировка 10.02.2024"}, {"id": "m183", "date": "2024-02-11", "label": "турнир Легион Колос 5:3"}, {"id": "m184", "date": "2024-02-11", "label": "турнир финал Легион Шахтер 4:6"}, {"id": "m185", "date": "2024-02-17", "label": "Игровая тренировка 17.02.2024"}, {"id": "m186", "date": "2024-02-24", "label": "Игровая тренировка 24.02.2024"}, {"id": "m187", "date": "2024-03-02", "label": "Игровая тренировка 02.03.2024"}, {"id": "m188", "date": "2024-03-09", "label": "Игровая тренировка 09.03.2024"}, {"id": "m189", "date": "2024-03-15", "label": "Игровая тренировка 15.03.2024"}, {"id": "m190", "date": "2024-03-16", "label": "Игровая тренировка 16.03.2024"}, {"id": "m191", "date": "2024-03-23", "label": "Игровая тренировка 23.03.2024"}, {"id": "m192", "date": "2024-03-29", "label": "Игровая тренировка 29.03.2024"}, {"id": "m193", "date": "2024-03-30", "label": "Игровая тренировка 30.03.2024"}, {"id": "m194", "date": "2024-04-05", "label": "Игровая тренировка 05.04.2024"}, {"id": "m195", "date": "2024-04-06", "label": "Игровая тренировка 06.04.2024"}, {"id": "m196", "date": "2024-04-12", "label": "Игровая тренировка 12.04.2024"}, {"id": "m197", "date": "2024-04-13", "label": "50+ Лавина - Ветераны 3:6"}, {"id": "m198", "date": "2024-04-14", "label": "УГО Каскад 6:1"}, {"id": "m199", "date": "2024-04-27", "label": "Игровая тренировка 27.04.2024"}, {"id": "m200", "date": "2024-04-30", "label": "товарняк ДВЖД - Водострой"}, {"id": "m201", "date": "2024-05-02", "label": "Игровая тренировка 02.05.2024"}, {"id": "m202", "date": "2024-05-03", "label": "Игровая тренировка 03.05.2024"}, {"id": "m203", "date": "2024-05-11", "label": "30+ Легион - Супротек 1:9"}, {"id": "m204", "date": "2024-05-11", "label": "30+ Легион - Росмет 2:9"}, {"id": "m205", "date": "2024-05-11", "label": "Игровая тренировка 11.05.2024"}, {"id": "m206", "date": "2024-05-12", "label": "30+ Легион - ДВЖД 3:2"}, {"id": "m207", "date": "2024-05-18", "label": "Игровая тренировка 18.05.2024"}, {"id": "m208", "date": "2024-05-19", "label": "Игровая тренировка 19.05.2024"}, {"id": "m209", "date": "2024-05-25", "label": "Игровая тренировка 25.05.2024"}, {"id": "m210", "date": "2024-05-31", "label": "Игровая тренировка 31.05.2024"}, {"id": "m211", "date": "2022-09-03", "label": "Игровая тренировка 03.09.2022"}, {"id": "m212", "date": "2022-09-04", "label": "Игровая тренировка 04.09.2022"}, {"id": "m213", "date": "2022-09-10", "label": "Игровая тренировка 10.09.2022"}, {"id": "m214", "date": "2022-09-11", "label": "Игровая тренировка 11.09.2022"}, {"id": "m215", "date": "2022-09-24", "label": "Игровая тренировка 24.09.2022"}, {"id": "m216", "date": "2022-10-01", "label": "Игровая тренировка 01.10.2022"}, {"id": "m217", "date": "2022-10-02", "label": "Игровая тренировка 02.10.2022"}, {"id": "m218", "date": "2022-10-08", "label": "Игровая тренировка 08.10.2022"}, {"id": "m219", "date": "2022-10-09", "label": "Игровая тренировка 09.10.2022"}, {"id": "m220", "date": "2022-10-22", "label": "Игровая тренировка 22.10.2022"}, {"id": "m221", "date": "2022-10-23", "label": "Игровая тренировка 23.10.2022"}, {"id": "m222", "date": "2022-10-29", "label": "Игровая тренировка 29.10.2022"}, {"id": "m223", "date": "2022-11-05", "label": "Игровая тренировка 05.11.2022"}, {"id": "m224", "date": "2022-11-12", "label": "Игровая тренировка 12.11.2022"}, {"id": "m225", "date": "2022-11-13", "label": "Игровая тренировка 13.11.2022"}, {"id": "m226", "date": "2022-11-19", "label": "Игровая тренировка 19.11.2022"}, {"id": "m227", "date": "2022-11-20", "label": "УСВУ"}, {"id": "m228", "date": "2022-11-26", "label": "Игровая тренировка 26.11.2022"}, {"id": "m229", "date": "2022-12-03", "label": "Игровая тренировка 03.12.2022"}, {"id": "m230", "date": "2022-12-04", "label": "Ветераны"}, {"id": "m231", "date": "2022-12-04", "label": "Игровая тренировка 04.12.2022"}, {"id": "m232", "date": "2022-12-10", "label": "Игровая тренировка 10.12.2022"}, {"id": "m233", "date": "2022-12-17", "label": "Игровая тренировка 17.12.2022"}, {"id": "m234", "date": "2022-12-20", "label": "Игровая тренировка 20.12.2022"}, {"id": "m235", "date": "2022-12-24", "label": "Игровая тренировка 24.12.2022"}, {"id": "m236", "date": "2022-12-27", "label": "Игровая тренировка 27.12.2022"}, {"id": "m237", "date": "2023-01-05", "label": "Игровая тренировка 05.01.2023"}, {"id": "m238", "date": "2023-01-07", "label": "Игровая тренировка 07.01.2023"}, {"id": "m239", "date": "2023-01-10", "label": "Игровая тренировка 10.01.2023"}, {"id": "m240", "date": "2023-01-14", "label": "Игровая тренировка 14.01.2023"}, {"id": "m241", "date": "2023-01-21", "label": "Игровая тренировка 21.01.2023"}, {"id": "m242", "date": "2023-01-22", "label": "Игровая тренировка 22.01.2023"}, {"id": "m243", "date": "2023-01-28", "label": "Игровая тренировка 28.01.2023"}, {"id": "m244", "date": "2023-01-29", "label": "Игровая тренировка 29.01.2023"}, {"id": "m245", "date": "2023-02-04", "label": "Витязь"}, {"id": "m246", "date": "2023-02-04", "label": "Игровая тренировка 04.02.2023"}, {"id": "m247", "date": "2023-02-05", "label": "Покровка"}, {"id": "m248", "date": "2023-02-05", "label": "Липовцы"}, {"id": "m249", "date": "2023-02-14", "label": "Игровая тренировка 14.02.2023"}, {"id": "m250", "date": "2023-02-18", "label": "Игровая тренировка 18.02.2023"}, {"id": "m251", "date": "2023-02-26", "label": "Аларм"}, {"id": "m252", "date": "2023-03-04", "label": "Игровая тренировка 04.03.2023"}, {"id": "m253", "date": "2023-03-07", "label": "Игровая тренировка 07.03.2023"}, {"id": "m254", "date": "2023-03-11", "label": "Игровая тренировка 11.03.2023"}, {"id": "m255", "date": "2023-03-18", "label": "Игровая тренировка 18.03.2023"}, {"id": "m256", "date": "2023-03-19", "label": "Игровая тренировка 19.03.2023"}, {"id": "m257", "date": "2023-03-25", "label": "Игровая тренировка 25.03.2023"}, {"id": "m258", "date": "2023-03-26", "label": "Игровая тренировка 26.03.2023"}, {"id": "m259", "date": "2023-03-28", "label": "Игровая тренировка 28.03.2023"}, {"id": "m260", "date": "2023-04-01", "label": "Игровая тренировка 01.04.2023"}, {"id": "m261", "date": "2023-04-02", "label": "Игровая тренировка 02.04.2023"}, {"id": "m262", "date": "2023-04-04", "label": "товарняк с Водостроем"}, {"id": "m263", "date": "2023-04-15", "label": "Супротек"}, {"id": "m264", "date": "2023-04-15", "label": "Игровая тренировка 15.04.2023"}, {"id": "m265", "date": "2023-04-15", "label": "товарняк с ДетДомом"}, {"id": "m266", "date": "2023-04-18", "label": "Игровая тренировка 18.04.2023"}, {"id": "m267", "date": "2023-04-22", "label": "Игровая тренировка 22.04.2023"}, {"id": "m268", "date": "2023-04-23", "label": "УСВУ"}, {"id": "m269", "date": "2023-04-25", "label": "товарняк с Водостроем"}, {"id": "m270", "date": "2023-04-29", "label": "Игровая тренировка 29.04.2023"}, {"id": "m271", "date": "2023-04-30", "label": "товарняк с Алармом"}, {"id": "m272", "date": "2023-05-02", "label": "товарняк с Водостроем"}, {"id": "m273", "date": "2023-05-06", "label": "Игровая тренировка 06.05.2023"}, {"id": "m274", "date": "2023-05-07", "label": "товарняк с Алармом"}, {"id": "m275", "date": "2023-05-13", "label": "Игровая тренировка 13.05.2023"}, {"id": "m276", "date": "2023-05-14", "label": "товарняк с Супротеком"}, {"id": "m277", "date": "2023-05-16", "label": "товарняк с Водостроем"}, {"id": "m278", "date": "2023-05-20", "label": "Игровая тренировка 20.05.2023"}, {"id": "m279", "date": "2023-05-23", "label": "Игровая тренировка 23.05.2023"}, {"id": "m280", "date": "2023-05-27", "label": "Игровая тренировка 27.05.2023"}, {"id": "m281", "date": "2023-05-30", "label": "товарняк с Водостроем"}, {"id": "m282", "date": "2025-09-12", "label": "Игровая тренировка 12.09.2025"}, {"id": "m283", "date": "2026-03-13", "label": "Игровая тренировка 13.03.2026"}, {"id": "m284", "date": "2026-04-04", "label": "Игровая тренировка 04.04.2026"}, {"id": "m285", "date": "2026-05-14", "label": "Игровая тренировка 14.05.2026"}, {"id": "m286", "date": "2026-05-21", "label": "Игровая тренировка 21.05.2026"}, {"id": "m287", "date": "2024-11-18", "label": "Игровая тренировка 18.11.2024"}, {"id": "m288", "date": "2024-12-07", "label": "Игровая тренировка 07.12.2024"}, {"id": "m289", "date": "2025-02-15", "label": "Легион - Вектор 4:3 турнир 35+"}, {"id": "m290", "date": "2025-02-16", "label": "Легион - Каскад 0:4 турнир 35+"}, {"id": "m291", "date": "2025-03-05", "label": "Игровая тренировка 05.03.2025"}, {"id": "m292", "date": "2023-10-21", "label": "Игровая тренировка 21.10.2023"}, {"id": "m293", "date": "2023-11-18", "label": "Игровая тренировка 18.11.2023"}, {"id": "m294", "date": "2023-12-24", "label": "УГО СУПРОТЕК 5:6 Б"}, {"id": "m295", "date": "2024-01-20", "label": "Игровая тренировка 20.01.2024"}, {"id": "m296", "date": "2024-03-01", "label": "Игровая тренировка 01.03.2024"}, {"id": "m297", "date": "2024-03-17", "label": "Игровая тренировка 17.03.2024"}, {"id": "m298", "date": "2024-03-22", "label": "Игровая тренировка 22.03.2024"}, {"id": "m299", "date": "2022-10-15", "label": "Игровая тренировка 15.10.2022"}, {"id": "m300", "date": "2023-02-25", "label": "Игровая тренировка 25.02.2023"}, {"id": "m301", "date": "2023-04-08", "label": "Игровая тренировка 08.04.2023"}, {"id": "m302", "date": "2023-04-08", "label": "товарняк с ДетДомом"}, {"id": "m303", "date": "2024-10-14", "label": "Игровая тренировка 14.10.2024"}, {"id": "m304", "date": "2024-10-19", "label": "ВРАТАРЬ"}, {"id": "m305", "date": "2024-11-10", "label": "Игровая тренировка 10.11.2024"}, {"id": "m306", "date": "2024-11-13", "label": "АХЛ Легион - Доброфлот 7:5"}, {"id": "m307", "date": "2024-12-08", "label": "АХЛ Легион - Локомотив 8:2"}, {"id": "m308", "date": "2023-09-29", "label": "Игровая тренировка 29.09.2023"}, {"id": "m309", "date": "2023-10-15", "label": "Игровая тренировка 15.10.2023"}, {"id": "m310", "date": "2023-12-09", "label": "50+ ЛАВИНА - исток 1:3"}, {"id": "m311", "date": "2023-12-10", "label": "50+ ЛАВИНА-юность 3:5"}, {"id": "m312", "date": "2024-01-05", "label": "Легион - Липовцы 4: 15"}, {"id": "m313", "date": "2024-01-05", "label": "Легион - Спартак 9:4"}, {"id": "m314", "date": "2024-01-08", "label": "Факел - Ярость 4:0"}, {"id": "m315", "date": "2024-01-14", "label": "Факел - Змеинка 0:3"}, {"id": "m316", "date": "2024-01-20", "label": "Факел - Русский Остров 3:0"}, {"id": "m317", "date": "2024-02-09", "label": "Игровая тренировка 09.02.2024"}, {"id": "m318", "date": "2024-02-16", "label": "Игровая тренировка 16.02.2024"}, {"id": "m319", "date": "2024-02-26", "label": "Игровая тренировка 26.02.2024"}, {"id": "m320", "date": "2024-03-14", "label": "Игровая тренировка 14.03.2024"}, {"id": "m321", "date": "2024-04-03", "label": "Игровая тренировка 03.04.2024"}, {"id": "m322", "date": "2024-04-07", "label": "Игровая тренировка 07.04.2024"}, {"id": "m323", "date": "2024-05-07", "label": "товарняк ДВЖД - Водострой"}, {"id": "m324", "date": "2024-05-12", "label": "Игровая тренировка 12.05.2024"}, {"id": "m325", "date": "2024-05-16", "label": "Игровая тренировка 16.05.2024"}, {"id": "m326", "date": "2024-05-23", "label": "Игровая тренировка 23.05.2024"}, {"id": "m327", "date": "2024-05-26", "label": "Игровая тренировка 26.05.2024"}, {"id": "m328", "date": "2024-05-28", "label": "Игровая тренировка 28.05.2024"}, {"id": "m329", "date": "2022-10-13", "label": "Игровая тренировка 13.10.2022"}, {"id": "m330", "date": "2022-10-16", "label": "Игровая тренировка 16.10.2022"}, {"id": "m331", "date": "2022-10-18", "label": "Игровая тренировка 18.10.2022"}, {"id": "m332", "date": "2022-10-27", "label": "Игровая тренировка 27.10.2022"}, {"id": "m333", "date": "2022-12-25", "label": "Игровая тренировка 25.12.2022"}, {"id": "m334", "date": "2023-02-12", "label": "Игровая тренировка 12.02.2023"}, {"id": "m335", "date": "2023-03-16", "label": "Игровая тренировка 16.03.2023"}, {"id": "m336", "date": "2023-03-26", "label": "За Лавину против Ветеранов 50+"}, {"id": "m337", "date": "2023-05-20", "label": "турнир 30+ за Ветеранов"}, {"id": "m338", "date": "2023-05-21", "label": "турнир 30+ за Ветеранов"}];
 
@@ -201,10 +201,10 @@ function buildHeatmapWeeks(entries, player, season) {
   const { start, end } = seasonDateRange(season);
   const pointsByDate = {};
   entries
-    .filter((e) => e.player === player && e.date >= start && e.date <= end)
-    .forEach((e) => {
-      pointsByDate[e.date] = (pointsByDate[e.date] || 0) + e.goals + e.assists;
-    });
+      .filter((e) => e.player === player && e.date >= start && e.date <= end)
+      .forEach((e) => {
+        pointsByDate[e.date] = (pointsByDate[e.date] || 0) + e.goals + e.assists;
+      });
   const days = [];
   const d = new Date(`${start}T00:00:00`);
   const endD = new Date(`${end}T00:00:00`);
@@ -232,16 +232,16 @@ function heatColor(points) {
 function Avatar({ name, color, size = 36 }) {
   const initials = name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
   return (
-    <div
-      style={{
-        width: size, height: size, borderRadius: '50%', background: color,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'Oswald, sans-serif', fontWeight: 600, color: PALETTE.navyDark,
-        fontSize: size * 0.38, flexShrink: 0,
-      }}
-    >
-      {initials}
-    </div>
+      <div
+          style={{
+            width: size, height: size, borderRadius: '50%', background: color,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'Oswald, sans-serif', fontWeight: 600, color: PALETTE.navyDark,
+            fontSize: size * 0.38, flexShrink: 0,
+          }}
+      >
+        {initials}
+      </div>
   );
 }
 
@@ -296,34 +296,41 @@ export default function HockeyTracker() {
           setError(`Не удалось прочитать таблицу players: ${playersRes.error.message}`);
         }
 
-        // First run ever: table is empty, seed it from the group's original spreadsheet history.
-        if (playerRows.length === 0 && !playersRes.error) {
+        // Not fully seeded yet (or a previous seeding attempt only got partway through):
+        // upsert everything so re-running this is always safe, and keep going even if
+        // one batch fails instead of abandoning the rest.
+        if (entryRows.length === 0 && !playersRes.error) {
           const seedErrors = [];
 
-          const { error: pErr } = await supabase.from('players').insert(DEFAULT_PLAYERS.map((name) => ({ name })));
+          const { error: pErr } = await supabase.from('players').upsert(DEFAULT_PLAYERS.map((name) => ({ name })));
           if (pErr) seedErrors.push(`players: ${pErr.message}`);
 
-          for (let i = 0; i < SEED_MATCHES.length; i += 200) {
-            const { error: mErr } = await supabase.from('matches').insert(SEED_MATCHES.slice(i, i + 200));
-            if (mErr) { seedErrors.push(`matches: ${mErr.message}`); break; }
+          for (let i = 0; i < SEED_MATCHES.length; i += 100) {
+            const { error: mErr } = await supabase.from('matches').upsert(SEED_MATCHES.slice(i, i + 100));
+            if (mErr) seedErrors.push(`matches batch ${i}: ${mErr.message}`);
           }
 
           const seedEntryRows = SEED_ENTRIES.map((en) => ({
             id: en.id, player: en.player, date: en.date, goals: en.goals, assists: en.assists, match_id: en.matchId,
           }));
-          for (let i = 0; i < seedEntryRows.length; i += 200) {
-            const { error: eErr } = await supabase.from('entries').insert(seedEntryRows.slice(i, i + 200));
-            if (eErr) { seedErrors.push(`entries: ${eErr.message}`); break; }
+          for (let i = 0; i < seedEntryRows.length; i += 100) {
+            const { error: eErr } = await supabase.from('entries').upsert(seedEntryRows.slice(i, i + 100));
+            if (eErr) seedErrors.push(`entries batch ${i}: ${eErr.message}`);
           }
 
           if (seedErrors.length > 0) {
             console.error('Supabase seeding errors:', seedErrors);
-            setError(`Не удалось сохранить исходные данные в базу (${seedErrors[0]}). Данные видны только в этом браузере — обновление страницы всё сбросит, пока не исправим права доступа в Supabase.`);
+            setError(`Не всё удалось сохранить в базу (${seedErrors[0]}). Обновите страницу через минуту — недостающее должно доехать.`);
           }
 
-          playerRows = DEFAULT_PLAYERS.map((name) => ({ name }));
-          matchRows = SEED_MATCHES;
-          entryRows = seedEntryRows;
+          const [freshPlayers, freshMatches, freshEntries] = await Promise.all([
+            supabase.from('players').select('*'),
+            supabase.from('matches').select('*'),
+            supabase.from('entries').select('*'),
+          ]);
+          playerRows = freshPlayers.data || [];
+          matchRows = freshMatches.data || [];
+          entryRows = freshEntries.data || [];
         }
 
         const loadedPlayers = playerRows.map((r) => r.name);
@@ -503,8 +510,8 @@ export default function HockeyTracker() {
   function handleExportCsv() {
     const header = ['Дата', 'Игрок', 'Голы', 'Передачи', 'Очки', 'Матч'];
     const rows = [...entries]
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .map((e) => [fmtDate(e.date), e.player, e.goals, e.assists, e.goals + e.assists, matchLabel(e.matchId)]);
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((e) => [fmtDate(e.date), e.player, e.goals, e.assists, e.goals + e.assists, matchLabel(e.matchId)]);
     const escape = (v) => `"${String(v).replace(/"/g, '""')}"`;
     const csv = [header, ...rows].map((r) => r.map(escape).join(';')).join('\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -520,33 +527,33 @@ export default function HockeyTracker() {
 
   const stats = useMemo(() => computeStats(entries, players), [entries, players]);
   const seasons = useMemo(
-    () => Array.from(new Set(entries.map((e) => seasonLabel(e.date)))).sort().reverse(),
-    [entries],
+      () => Array.from(new Set(entries.map((e) => seasonLabel(e.date)))).sort().reverse(),
+      [entries],
   );
   const currentSeason = season || seasons[0];
   const seasonEntries = useMemo(
-    () => entries.filter((e) => seasonLabel(e.date) === currentSeason),
-    [entries, currentSeason],
+      () => entries.filter((e) => seasonLabel(e.date) === currentSeason),
+      [entries, currentSeason],
   );
   const seasonStats = useMemo(() => computeStats(seasonEntries, players), [seasonEntries, players]);
   const activePlayers = useMemo(
-    () => players.filter((p) => seasonEntries.some((e) => e.player === p)),
-    [players, seasonEntries],
+      () => players.filter((p) => seasonEntries.some((e) => e.player === p)),
+      [players, seasonEntries],
   );
   const cumulativeData = useMemo(
-    () => (currentSeason ? buildCumulativeSeries(entries, activePlayers, currentSeason) : []),
-    [entries, activePlayers, currentSeason],
+      () => (currentSeason ? buildCumulativeSeries(entries, activePlayers, currentSeason) : []),
+      [entries, activePlayers, currentSeason],
   );
   const totalsBar = useMemo(
-    () => (currentSeason ? buildTotalsBar(entries, activePlayers, currentSeason) : []),
-    [entries, activePlayers, currentSeason],
+      () => (currentSeason ? buildTotalsBar(entries, activePlayers, currentSeason) : []),
+      [entries, activePlayers, currentSeason],
   );
   const seasonGP = new Set(seasonEntries.map((e) => e.matchId)).size;
   const leader = seasonStats.leaderboard.find((p) => p.gp > 0);
   const recentEntries = [...seasonEntries].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   const matchesForDate = useMemo(
-    () => matches.filter((m) => m.date === form.date),
-    [matches, form.date],
+      () => matches.filter((m) => m.date === form.date),
+      [matches, form.date],
   );
 
   const activeCareerPlayers = stats.leaderboard.filter((p) => p.gp > 0).map((p) => p.player);
@@ -604,17 +611,17 @@ export default function HockeyTracker() {
   const playerB = compareB && activeCareerPlayers.includes(compareB) ? compareB : activeCareerPlayers[1];
   const profileStats = profilePlayer ? stats.byPlayer[profilePlayer] : null;
   const profileSeasonHistory = useMemo(
-    () => (profilePlayer ? buildSeasonHistory(entries, profilePlayer) : []),
-    [entries, profilePlayer],
+      () => (profilePlayer ? buildSeasonHistory(entries, profilePlayer) : []),
+      [entries, profilePlayer],
   );
   const activeProfileSeason = profileSeason || currentSeason;
   const profileHeatmap = useMemo(
-    () => (profilePlayer && activeProfileSeason ? buildHeatmapWeeks(entries, profilePlayer, activeProfileSeason) : []),
-    [entries, profilePlayer, activeProfileSeason],
+      () => (profilePlayer && activeProfileSeason ? buildHeatmapWeeks(entries, profilePlayer, activeProfileSeason) : []),
+      [entries, profilePlayer, activeProfileSeason],
   );
   const profileRecent = profilePlayer
-    ? [...entries].filter((e) => e.player === profilePlayer).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10)
-    : [];
+      ? [...entries].filter((e) => e.player === profilePlayer).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10)
+      : [];
 
   function openProfile(name) {
     setProfilePlayer(name);
@@ -738,15 +745,15 @@ export default function HockeyTracker() {
 
   if (loading) {
     return (
-      <div style={{ background: PALETTE.navy, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: PALETTE.ice, fontFamily: 'Manrope, sans-serif' }}>
-        Загружаем статистику…
-      </div>
+        <div style={{ background: PALETTE.navy, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: PALETTE.ice, fontFamily: 'Manrope, sans-serif' }}>
+          Загружаем статистику…
+        </div>
     );
   }
 
   return (
-    <div className="ht-app" style={{ background: PALETTE.navy, minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
-      <style>{`
+      <div className="ht-app" style={{ background: PALETTE.navy, minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
         @media (max-width: 480px) {
           .ht-app { padding: 12px 8px 24px !important; }
@@ -762,940 +769,940 @@ export default function HockeyTracker() {
         }
       `}</style>
 
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        {/* Scoreboard hero */}
-        <div style={{ border: `1px solid ${PALETTE.panelLine}`, background: PALETTE.navyDark, borderRadius: 4, overflow: 'hidden', marginBottom: 20 }}>
-          <div style={{ display: 'flex', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
-            <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', borderRight: `1px solid ${PALETTE.panelLine}`, minWidth: 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Сезон</div>
-              <select
-                value={currentSeason || ''}
-                onChange={(e) => setSeason(e.target.value)}
-                className="ht-hero-season"
-                style={{ background: 'transparent', border: 'none', color: PALETTE.gold, fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600, outline: 'none', width: '100%' }}
-              >
-                {seasons.map((s) => <option key={s} value={s} style={{ background: PALETTE.navy }}>{s}</option>)}
-              </select>
-            </div>
-            <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', minWidth: 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Игр сыграно</div>
-              <div className="ht-hero-num" style={{ fontFamily: 'Oswald, sans-serif', fontSize: 28, fontWeight: 600 }}>{seasonGP}</div>
-            </div>
-          </div>
-          <div className="ht-hero-seg" style={{ padding: '18px 20px' }}>
-            <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Лидер по очкам</div>
-            {leader ? (
-              <button
-                onClick={() => openProfile(leader.player)}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
-              >
-                <Avatar name={leader.player} color={colorFor(leader.player)} />
-                <div>
-                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600, lineHeight: 1.1, color: PALETTE.ice }}>{leader.player}</div>
-                  <div style={{ color: PALETTE.gold, fontSize: 13 }}>{leader.points} очков</div>
-                </div>
-              </button>
-            ) : <div style={{ color: PALETTE.iceDim }}>Пока нет игр</div>}
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="ht-tabs" style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: `1px solid ${PALETTE.panelLine}`, overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
-          {[
-            ['dashboard', 'Дашборд', TrendingUp],
-            ['leaderboard', 'Рейтинг', Trophy],
-            ['achievements', 'Достижения', Flame],
-            ['compare', 'Сравнение', Users],
-            ['wrapped', 'Итоги', Sparkles],
-            ['log', 'Игры', Target],
-          ].map(([key, label, Icon]) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className="ht-tab-btn"
-              style={{
-                display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', background: 'none',
-                border: 'none', borderBottom: tab === key ? `2px solid ${PALETTE.red}` : '2px solid transparent',
-                color: tab === key ? PALETTE.ice : PALETTE.iceDim, fontFamily: 'Manrope, sans-serif',
-                fontWeight: tab === key ? 700 : 500, fontSize: 14, cursor: 'pointer', flexShrink: 0,
-              }}
-            >
-              <Icon size={15} /> {label}
-            </button>
-          ))}
-        </div>
-
-        {error && (
-          <div style={{ background: 'rgba(200,40,63,0.15)', border: `1px solid ${PALETTE.red}`, borderRadius: 4, padding: 10, marginBottom: 16, fontSize: 13 }}>
-            {error}
-          </div>
-        )}
-
-        {tab === 'dashboard' && (
-          <div>
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Очки нарастающим итогом за сезон {currentSeason}</div>
-              {cumulativeData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={260}>
-                  <LineChart data={cumulativeData} margin={{ left: -10, right: 10 }}>
-                    <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
-                    <XAxis dataKey="game" stroke={PALETTE.iceDim} fontSize={12} label={{ value: 'Игра №', position: 'insideBottom', offset: -3, fill: PALETTE.iceDim, fontSize: 11 }} />
-                    <YAxis stroke={PALETTE.iceDim} fontSize={12} />
-                    <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
-                    <Legend wrapperStyle={{ fontSize: 12 }} />
-                    {activePlayers.map((p) => (
-                      <Line key={p} type="monotone" dataKey={p} stroke={colorFor(p)} strokeWidth={2} dot={false} connectNulls />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Нет данных за этот сезон.</div>}
-            </div>
-
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Голы и передачи за сезон</div>
-              {totalsBar.length > 0 ? (
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={totalsBar} margin={{ left: -10, right: 10 }}>
-                    <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
-                    <XAxis dataKey="player" stroke={PALETTE.iceDim} fontSize={12} />
-                    <YAxis stroke={PALETTE.iceDim} fontSize={12} />
-                    <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
-                    <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <Bar dataKey="Голы" fill={PALETTE.red} radius={[3, 3, 0, 0]} />
-                    <Bar dataKey="Передачи" fill={PALETTE.steel} radius={[3, 3, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Нет данных за этот сезон.</div>}
-            </div>
-          </div>
-        )}
-
-        {tab === 'leaderboard' && (
-          <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
-            <div className="ht-row" style={{ padding: '10px 16px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Сезон {currentSeason}</div>
-            <div className="ht-row" style={{ display: 'grid', gridTemplateColumns: '24px 1fr 34px 34px 34px 46px', padding: '10px 16px', fontSize: 11, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>
-              <div>#</div><div>Игрок</div><div>Г</div><div>П</div><div>О</div><div>О/И</div>
-            </div>
-            {seasonStats.leaderboard.filter((p) => p.gp > 0).map((p, i) => (
-              <div
-                key={p.player}
-                className="ht-row"
-                style={{
-                  display: 'grid', gridTemplateColumns: '24px 1fr 34px 34px 34px 46px', alignItems: 'center',
-                  padding: '12px 16px', borderBottom: `1px solid ${PALETTE.panelLine}`,
-                  background: i === 0 && p.gp > 0 ? 'rgba(211,166,37,0.08)' : 'transparent',
-                }}
-              >
-                <div style={{ fontFamily: 'Oswald, sans-serif', color: i === 0 ? PALETTE.gold : PALETTE.iceDim }}>{i + 1}</div>
-                <button
-                  onClick={() => openProfile(p.player)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', minWidth: 0 }}
+        <div style={{ maxWidth: 880, margin: '0 auto' }}>
+          {/* Scoreboard hero */}
+          <div style={{ border: `1px solid ${PALETTE.panelLine}`, background: PALETTE.navyDark, borderRadius: 4, overflow: 'hidden', marginBottom: 20 }}>
+            <div style={{ display: 'flex', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
+              <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', borderRight: `1px solid ${PALETTE.panelLine}`, minWidth: 0 }}>
+                <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Сезон</div>
+                <select
+                    value={currentSeason || ''}
+                    onChange={(e) => setSeason(e.target.value)}
+                    className="ht-hero-season"
+                    style={{ background: 'transparent', border: 'none', color: PALETTE.gold, fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600, outline: 'none', width: '100%' }}
                 >
-                  <Avatar name={p.player} color={colorFor(p.player)} size={28} />
-                  <span style={{ fontWeight: 600, color: PALETTE.ice, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.player}</span>
-                  {computeTrend(stats.byPlayer[p.player]) === 'up' && <TrendingUp size={14} color={PALETTE.gold} style={{ flexShrink: 0 }} title="В ударе: последние игры сильнее средних" />}
-                  {computeTrend(stats.byPlayer[p.player]) === 'down' && <TrendingDown size={14} color={PALETTE.iceDim} style={{ flexShrink: 0 }} title="Спад формы: последние игры слабее средних" />}
-                </button>
-                <div>{p.goals}</div>
-                <div>{p.assists}</div>
-                <div style={{ fontWeight: 700 }}>{p.points}</div>
-                <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>{p.ppg.toFixed(2)}</div>
+                  {seasons.map((s) => <option key={s} value={s} style={{ background: PALETTE.navy }}>{s}</option>)}
+                </select>
               </div>
+              <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', minWidth: 0 }}>
+                <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Игр сыграно</div>
+                <div className="ht-hero-num" style={{ fontFamily: 'Oswald, sans-serif', fontSize: 28, fontWeight: 600 }}>{seasonGP}</div>
+              </div>
+            </div>
+            <div className="ht-hero-seg" style={{ padding: '18px 20px' }}>
+              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Лидер по очкам</div>
+              {leader ? (
+                  <button
+                      onClick={() => openProfile(leader.player)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                  >
+                    <Avatar name={leader.player} color={colorFor(leader.player)} />
+                    <div>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600, lineHeight: 1.1, color: PALETTE.ice }}>{leader.player}</div>
+                      <div style={{ color: PALETTE.gold, fontSize: 13 }}>{leader.points} очков</div>
+                    </div>
+                  </button>
+              ) : <div style={{ color: PALETTE.iceDim }}>Пока нет игр</div>}
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="ht-tabs" style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: `1px solid ${PALETTE.panelLine}`, overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
+            {[
+              ['dashboard', 'Дашборд', TrendingUp],
+              ['leaderboard', 'Рейтинг', Trophy],
+              ['achievements', 'Достижения', Flame],
+              ['compare', 'Сравнение', Users],
+              ['wrapped', 'Итоги', Sparkles],
+              ['log', 'Игры', Target],
+            ].map(([key, label, Icon]) => (
+                <button
+                    key={key}
+                    onClick={() => setTab(key)}
+                    className="ht-tab-btn"
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', background: 'none',
+                      border: 'none', borderBottom: tab === key ? `2px solid ${PALETTE.red}` : '2px solid transparent',
+                      color: tab === key ? PALETTE.ice : PALETTE.iceDim, fontFamily: 'Manrope, sans-serif',
+                      fontWeight: tab === key ? 700 : 500, fontSize: 14, cursor: 'pointer', flexShrink: 0,
+                    }}
+                >
+                  <Icon size={15} /> {label}
+                </button>
             ))}
           </div>
-        )}
 
-        {tab === 'achievements' && (
-          <div>
-            <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
-              {stats.leaderboard.filter((p) => p.gp > 0).map((p) => (
-                <div key={p.player} className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                  <button
-                    onClick={() => openProfile(p.player)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
-                  >
-                    <Avatar name={p.player} color={colorFor(p.player)} />
-                    <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, color: PALETTE.ice }}>{p.player}</span>
-                  </button>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-                    {p.multiPointGames > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Игры с 2+ очками</span><span style={{ fontWeight: 700 }}>{p.multiPointGames}</span>
-                      </div>
-                    )}
-                    {p.hatTricks > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Хет-трики</span><span style={{ fontWeight: 700 }}>{p.hatTricks}</span>
-                      </div>
-                    )}
-                    {p.pokerGames > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Покер (4+ гола)</span><span style={{ fontWeight: 700 }}>{p.pokerGames}</span>
-                      </div>
-                    )}
-                    {p.pentaTricks > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.purple }}>Пента-трик (5 голов)</span><span style={{ fontWeight: 700, color: PALETTE.purple }}>{p.pentaTricks}</span>
-                      </div>
-                    )}
-                    {p.goalMadness > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.red }}>Голевое безумие (6+)</span><span style={{ fontWeight: 700, color: PALETTE.red }}>{p.goalMadness}</span>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: PALETTE.iceDim }}>Лучшая игра</span>
-                      <span style={{ fontWeight: 700 }}>{p.bestGame ? `${p.bestGame.points} очк. (${fmtDate(p.bestGame.date)})` : '—'}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: PALETTE.iceDim }}>Текущая серия</span>
-                      <span style={{ fontWeight: 700, color: p.currentStreak >= 3 ? PALETTE.gold : PALETTE.ice }}>{p.currentStreak} игр подряд с очком</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: PALETTE.iceDim }}>Лучшая серия</span><span style={{ fontWeight: 700 }}>{p.longestStreak}</span>
-                    </div>
-                    {seasonAwards.points[p.player] > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим бомбардиром</span><span style={{ fontWeight: 700 }}>{seasonAwards.points[p.player]}</span>
-                      </div>
-                    )}
-                    {seasonAwards.goals[p.player] > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим снайпером</span><span style={{ fontWeight: 700 }}>{seasonAwards.goals[p.player]}</span>
-                      </div>
-                    )}
-                    {seasonAwards.assists[p.player] > 0 && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим ассистентом</span><span style={{ fontWeight: 700 }}>{seasonAwards.assists[p.player]}</span>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: PALETTE.iceDim }}>Карьера</span><span style={{ fontWeight: 700 }}>{p.points} очков за {p.gp} игр</span>
-                    </div>
-                    {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000].filter((m) => p.points >= m).slice(-1).map((m) => (
-                      <div key={m} style={{ marginTop: 4, fontSize: 12, color: PALETTE.gold, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Flame size={13} /> Клуб {m}+ очков
-                      </div>
-                    ))}
-                    {MILESTONES_50.filter((m) => p.goals >= m).slice(-1).map((m) => (
-                      <div key={`goals${m}`} style={{ fontSize: 12, color: PALETTE.red, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Flame size={13} /> Клуб {m}+ голов
-                      </div>
-                    ))}
-                    {MILESTONES_50.filter((m) => p.assists >= m).slice(-1).map((m) => (
-                      <div key={`a${m}`} style={{ fontSize: 12, color: PALETTE.steel, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Flame size={13} /> Клуб {m}+ передач
-                      </div>
-                    ))}
-                    {MILESTONES_50.filter((m) => p.gp >= m).slice(-1).map((m) => (
-                      <div key={`g${m}`} style={{ fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <Flame size={13} /> Клуб {m}+ игр
-                      </div>
-                    ))}
-                    {(() => {
-                      const nm = nearestMilestone(p);
-                      if (!nm || nm.remaining > 20) return null;
-                      return (
-                        <div style={{ marginTop: 4, fontSize: 12, color: PALETTE.ice, background: 'rgba(211,166,37,0.12)', border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: '5px 8px' }}>
-                          Почти! До клуба {nm.target}+ {nm.label} осталось {nm.remaining}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          {error && (
+              <div style={{ background: 'rgba(200,40,63,0.15)', border: `1px solid ${PALETTE.red}`, borderRadius: 4, padding: 10, marginBottom: 16, fontSize: 13 }}>
+                {error}
+              </div>
+          )}
 
-        {tab === 'compare' && (
-          <div>
-            <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
-            <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-              <select
-                value={playerA || ''}
-                onChange={(ev) => setCompareA(ev.target.value)}
-                style={{ flex: '1 1 140px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-              >
-                {activeCareerPlayers.filter((p) => p !== playerB).map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
-              <div style={{ display: 'flex', alignItems: 'center', color: PALETTE.iceDim, fontFamily: 'Oswald, sans-serif' }}>vs</div>
-              <select
-                value={playerB || ''}
-                onChange={(ev) => setCompareB(ev.target.value)}
-                style={{ flex: '1 1 140px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-              >
-                {activeCareerPlayers.filter((p) => p !== playerA).map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
-            </div>
-
-            {playerA && playerB && playerA !== playerB ? (() => {
-              const a = stats.byPlayer[playerA];
-              const b = stats.byPlayer[playerB];
-              const colorA = colorFor(playerA);
-              const colorB = colorFor(playerB);
-              const rows = [
-                ['Очки', a.points, b.points],
-                ['Голы', a.goals, b.goals],
-                ['Передачи', a.assists, b.assists],
-                ['Игр', a.gp, b.gp],
-                ['Очков/игру', Number(a.ppg.toFixed(2)), Number(b.ppg.toFixed(2))],
-                ['Хет-трики', a.hatTricks, b.hatTricks],
-                ['Игры с 2+ очками', a.multiPointGames, b.multiPointGames],
-              ];
-              return (
-                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 20 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                    <button onClick={() => openProfile(playerA)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                      <Avatar name={playerA} color={colorA} />
-                      <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{playerA}</span>
-                    </button>
-                    <span style={{ color: PALETTE.iceDim, fontFamily: 'Oswald, sans-serif', fontSize: 13 }}>VS</span>
-                    <button onClick={() => openProfile(playerB)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                      <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{playerB}</span>
-                      <Avatar name={playerB} color={colorB} />
-                    </button>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                    {rows.map(([label, va, vb]) => {
-                      const total = va + vb;
-                      const pctA = total > 0 ? (va / total) * 100 : 50;
-                      const pctB = 100 - pctA;
-                      return (
-                        <div key={label}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginBottom: 6 }}>
-                            <span style={{ fontWeight: 700, color: va >= vb ? colorA : PALETTE.iceDim }}>{va}</span>
-                            <span style={{ color: PALETTE.iceDim, fontSize: 12 }}>{label}</span>
-                            <span style={{ fontWeight: 700, color: vb >= va ? colorB : PALETTE.iceDim }}>{vb}</span>
-                          </div>
-                          <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', background: PALETTE.panelLine }}>
-                            <div style={{ width: `${pctA}%`, background: colorA }} />
-                            <div style={{ width: `${pctB}%`, background: colorB }} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })() : (
-              <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Выберите двух разных игроков для сравнения.</div>
-            )}
-          </div>
-        )}
-
-        {tab === 'wrapped' && (
-          <div>
-            {seasonWrapped ? (
-              <>
-                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600, marginBottom: 4 }}>Итоги сезона {currentSeason}</div>
-                <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 16 }}>{seasonWrapped.gamesCount} игр сыграно вместе</div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 16 }}>
-                  {seasonWrapped.topScorer && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: 16 }}>
-                      <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><Trophy size={13} color={PALETTE.gold} /> Лучший бомбардир</div>
-                      <button onClick={() => openProfile(seasonWrapped.topScorer.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <Avatar name={seasonWrapped.topScorer.player} color={colorFor(seasonWrapped.topScorer.player)} />
-                        <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topScorer.player}</div>
-                          <div style={{ fontSize: 12, color: PALETTE.gold }}>{seasonWrapped.topScorer.points} очков</div>
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                  {seasonWrapped.topAssist && seasonWrapped.topAssist.assists > 0 && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                      <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Лучший ассистент</div>
-                      <button onClick={() => openProfile(seasonWrapped.topAssist.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <Avatar name={seasonWrapped.topAssist.player} color={colorFor(seasonWrapped.topAssist.player)} />
-                        <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topAssist.player}</div>
-                          <div style={{ fontSize: 12, color: PALETTE.steel }}>{seasonWrapped.topAssist.assists} передач</div>
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                  {seasonWrapped.bestGame && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                      <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Игра сезона</div>
-                      <button onClick={() => openProfile(seasonWrapped.bestGame.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <Avatar name={seasonWrapped.bestGame.player} color={colorFor(seasonWrapped.bestGame.player)} />
-                        <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.bestGame.player}</div>
-                          <div style={{ fontSize: 12, color: PALETTE.red }}>{seasonWrapped.bestGame.points} очков ({fmtDate(seasonWrapped.bestGame.date)})</div>
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                  {seasonWrapped.mostImproved && seasonWrapped.mostImproved.delta > 0 && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                      <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><TrendingUp size={13} color={PALETTE.teal} /> Самый прогрессирующий</div>
-                      <button onClick={() => openProfile(seasonWrapped.mostImproved.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                        <Avatar name={seasonWrapped.mostImproved.player} color={colorFor(seasonWrapped.mostImproved.player)} />
-                        <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.mostImproved.player}</div>
-                          <div style={{ fontSize: 12, color: PALETTE.teal }}>{seasonWrapped.mostImproved.prevPpg.toFixed(2)} → {seasonWrapped.mostImproved.curPpg.toFixed(2)} очк./игру</div>
-                        </div>
-                      </button>
-                    </div>
-                  )}
+          {tab === 'dashboard' && (
+              <div>
+                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Очки нарастающим итогом за сезон {currentSeason}</div>
+                  {cumulativeData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={260}>
+                        <LineChart data={cumulativeData} margin={{ left: -10, right: 10 }}>
+                          <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
+                          <XAxis dataKey="game" stroke={PALETTE.iceDim} fontSize={12} label={{ value: 'Игра №', position: 'insideBottom', offset: -3, fill: PALETTE.iceDim, fontSize: 11 }} />
+                          <YAxis stroke={PALETTE.iceDim} fontSize={12} />
+                          <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
+                          <Legend wrapperStyle={{ fontSize: 12 }} />
+                          {activePlayers.map((p) => (
+                              <Line key={p} type="monotone" dataKey={p} stroke={colorFor(p)} strokeWidth={2} dot={false} connectNulls />
+                          ))}
+                        </LineChart>
+                      </ResponsiveContainer>
+                  ) : <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Нет данных за этот сезон.</div>}
                 </div>
 
                 <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Общий зачёт компании</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: 12, fontSize: 13 }}>
-                    <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Голы</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.goals}</div></div>
-                    <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Передачи</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.assists}</div></div>
-                    <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Очки</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.points}</div></div>
-                    <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Хет-трики</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.hatTricks}</div></div>
-                    <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Покер+</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.poker}</div></div>
-                  </div>
+                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Голы и передачи за сезон</div>
+                  {totalsBar.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={totalsBar} margin={{ left: -10, right: 10 }}>
+                          <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
+                          <XAxis dataKey="player" stroke={PALETTE.iceDim} fontSize={12} />
+                          <YAxis stroke={PALETTE.iceDim} fontSize={12} />
+                          <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
+                          <Legend wrapperStyle={{ fontSize: 12 }} />
+                          <Bar dataKey="Голы" fill={PALETTE.red} radius={[3, 3, 0, 0]} />
+                          <Bar dataKey="Передачи" fill={PALETTE.steel} radius={[3, 3, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  ) : <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Нет данных за этот сезон.</div>}
                 </div>
-              </>
-            ) : (
-              <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>В этом сезоне пока нет игр — итоги появятся, когда наберётся статистика.</div>
-            )}
-          </div>
-        )}
+              </div>
+          )}
 
-        {tab === 'log' && (
-          <div>
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Добавить игру</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
-                <div style={{ flex: '1 1 140px' }}>
-                  <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Игрок</label>
-                  {!newPlayerMode ? (
-                    <select
-                      value={form.player}
-                      onChange={(ev) => (ev.target.value === '__newplayer__' ? setNewPlayerMode(true) : setForm({ ...form, player: ev.target.value }))}
-                      className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+          {tab === 'leaderboard' && (
+              <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+                <div className="ht-row" style={{ padding: '10px 16px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Сезон {currentSeason}</div>
+                <div className="ht-row" style={{ display: 'grid', gridTemplateColumns: '24px 1fr 34px 34px 34px 46px', padding: '10px 16px', fontSize: 11, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>
+                  <div>#</div><div>Игрок</div><div>Г</div><div>П</div><div>О</div><div>О/И</div>
+                </div>
+                {seasonStats.leaderboard.filter((p) => p.gp > 0).map((p, i) => (
+                    <div
+                        key={p.player}
+                        className="ht-row"
+                        style={{
+                          display: 'grid', gridTemplateColumns: '24px 1fr 34px 34px 34px 46px', alignItems: 'center',
+                          padding: '12px 16px', borderBottom: `1px solid ${PALETTE.panelLine}`,
+                          background: i === 0 && p.gp > 0 ? 'rgba(211,166,37,0.08)' : 'transparent',
+                        }}
                     >
-                      {players.map((p) => <option key={p} value={p}>{p}</option>)}
-                      <option value="__newplayer__">+ новый игрок</option>
-                    </select>
-                  ) : (
-                    <div style={{ display: 'flex', gap: 4 }}>
-                      <input
-                        autoFocus
-                        placeholder="Имя"
-                        onKeyDown={(ev) => { if (ev.key === 'Enter') { ev.preventDefault(); handleAddPlayer(ev.target.value); } }}
-                        className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                      />
-                      <button type="button" onClick={() => setNewPlayerMode(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={16} /></button>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', color: i === 0 ? PALETTE.gold : PALETTE.iceDim }}>{i + 1}</div>
+                      <button
+                          onClick={() => openProfile(p.player)}
+                          style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', minWidth: 0 }}
+                      >
+                        <Avatar name={p.player} color={colorFor(p.player)} size={28} />
+                        <span style={{ fontWeight: 600, color: PALETTE.ice, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.player}</span>
+                        {computeTrend(stats.byPlayer[p.player]) === 'up' && <TrendingUp size={14} color={PALETTE.gold} style={{ flexShrink: 0 }} title="В ударе: последние игры сильнее средних" />}
+                        {computeTrend(stats.byPlayer[p.player]) === 'down' && <TrendingDown size={14} color={PALETTE.iceDim} style={{ flexShrink: 0 }} title="Спад формы: последние игры слабее средних" />}
+                      </button>
+                      <div>{p.goals}</div>
+                      <div>{p.assists}</div>
+                      <div style={{ fontWeight: 700 }}>{p.points}</div>
+                      <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>{p.ppg.toFixed(2)}</div>
                     </div>
+                ))}
+              </div>
+          )}
+
+          {tab === 'achievements' && (
+              <div>
+                <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+                  {stats.leaderboard.filter((p) => p.gp > 0).map((p) => (
+                      <div key={p.player} className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                        <button
+                            onClick={() => openProfile(p.player)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                        >
+                          <Avatar name={p.player} color={colorFor(p.player)} />
+                          <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, color: PALETTE.ice }}>{p.player}</span>
+                        </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
+                          {p.multiPointGames > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Игры с 2+ очками</span><span style={{ fontWeight: 700 }}>{p.multiPointGames}</span>
+                              </div>
+                          )}
+                          {p.hatTricks > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Хет-трики</span><span style={{ fontWeight: 700 }}>{p.hatTricks}</span>
+                              </div>
+                          )}
+                          {p.pokerGames > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Покер (4+ гола)</span><span style={{ fontWeight: 700 }}>{p.pokerGames}</span>
+                              </div>
+                          )}
+                          {p.pentaTricks > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.purple }}>Пента-трик (5 голов)</span><span style={{ fontWeight: 700, color: PALETTE.purple }}>{p.pentaTricks}</span>
+                              </div>
+                          )}
+                          {p.goalMadness > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.red }}>Голевое безумие (6+)</span><span style={{ fontWeight: 700, color: PALETTE.red }}>{p.goalMadness}</span>
+                              </div>
+                          )}
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span style={{ color: PALETTE.iceDim }}>Лучшая игра</span>
+                            <span style={{ fontWeight: 700 }}>{p.bestGame ? `${p.bestGame.points} очк. (${fmtDate(p.bestGame.date)})` : '—'}</span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span style={{ color: PALETTE.iceDim }}>Текущая серия</span>
+                            <span style={{ fontWeight: 700, color: p.currentStreak >= 3 ? PALETTE.gold : PALETTE.ice }}>{p.currentStreak} игр подряд с очком</span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span style={{ color: PALETTE.iceDim }}>Лучшая серия</span><span style={{ fontWeight: 700 }}>{p.longestStreak}</span>
+                          </div>
+                          {seasonAwards.points[p.player] > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим бомбардиром</span><span style={{ fontWeight: 700 }}>{seasonAwards.points[p.player]}</span>
+                              </div>
+                          )}
+                          {seasonAwards.goals[p.player] > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим снайпером</span><span style={{ fontWeight: 700 }}>{seasonAwards.goals[p.player]}</span>
+                              </div>
+                          )}
+                          {seasonAwards.assists[p.player] > 0 && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: PALETTE.iceDim }}>Сезонов лучшим ассистентом</span><span style={{ fontWeight: 700 }}>{seasonAwards.assists[p.player]}</span>
+                              </div>
+                          )}
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span style={{ color: PALETTE.iceDim }}>Карьера</span><span style={{ fontWeight: 700 }}>{p.points} очков за {p.gp} игр</span>
+                          </div>
+                          {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000].filter((m) => p.points >= m).slice(-1).map((m) => (
+                              <div key={m} style={{ marginTop: 4, fontSize: 12, color: PALETTE.gold, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <Flame size={13} /> Клуб {m}+ очков
+                              </div>
+                          ))}
+                          {MILESTONES_50.filter((m) => p.goals >= m).slice(-1).map((m) => (
+                              <div key={`goals${m}`} style={{ fontSize: 12, color: PALETTE.red, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <Flame size={13} /> Клуб {m}+ голов
+                              </div>
+                          ))}
+                          {MILESTONES_50.filter((m) => p.assists >= m).slice(-1).map((m) => (
+                              <div key={`a${m}`} style={{ fontSize: 12, color: PALETTE.steel, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <Flame size={13} /> Клуб {m}+ передач
+                              </div>
+                          ))}
+                          {MILESTONES_50.filter((m) => p.gp >= m).slice(-1).map((m) => (
+                              <div key={`g${m}`} style={{ fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <Flame size={13} /> Клуб {m}+ игр
+                              </div>
+                          ))}
+                          {(() => {
+                            const nm = nearestMilestone(p);
+                            if (!nm || nm.remaining > 20) return null;
+                            return (
+                                <div style={{ marginTop: 4, fontSize: 12, color: PALETTE.ice, background: 'rgba(211,166,37,0.12)', border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: '5px 8px' }}>
+                                  Почти! До клуба {nm.target}+ {nm.label} осталось {nm.remaining}
+                                </div>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                  ))}
+                </div>
+              </div>
+          )}
+
+          {tab === 'compare' && (
+              <div>
+                <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
+                <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+                  <select
+                      value={playerA || ''}
+                      onChange={(ev) => setCompareA(ev.target.value)}
+                      style={{ flex: '1 1 140px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                  >
+                    {activeCareerPlayers.filter((p) => p !== playerB).map((p) => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                  <div style={{ display: 'flex', alignItems: 'center', color: PALETTE.iceDim, fontFamily: 'Oswald, sans-serif' }}>vs</div>
+                  <select
+                      value={playerB || ''}
+                      onChange={(ev) => setCompareB(ev.target.value)}
+                      style={{ flex: '1 1 140px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                  >
+                    {activeCareerPlayers.filter((p) => p !== playerA).map((p) => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
+
+                {playerA && playerB && playerA !== playerB ? (() => {
+                  const a = stats.byPlayer[playerA];
+                  const b = stats.byPlayer[playerB];
+                  const colorA = colorFor(playerA);
+                  const colorB = colorFor(playerB);
+                  const rows = [
+                    ['Очки', a.points, b.points],
+                    ['Голы', a.goals, b.goals],
+                    ['Передачи', a.assists, b.assists],
+                    ['Игр', a.gp, b.gp],
+                    ['Очков/игру', Number(a.ppg.toFixed(2)), Number(b.ppg.toFixed(2))],
+                    ['Хет-трики', a.hatTricks, b.hatTricks],
+                    ['Игры с 2+ очками', a.multiPointGames, b.multiPointGames],
+                  ];
+                  return (
+                      <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 20 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                          <button onClick={() => openProfile(playerA)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                            <Avatar name={playerA} color={colorA} />
+                            <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{playerA}</span>
+                          </button>
+                          <span style={{ color: PALETTE.iceDim, fontFamily: 'Oswald, sans-serif', fontSize: 13 }}>VS</span>
+                          <button onClick={() => openProfile(playerB)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                            <span style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{playerB}</span>
+                            <Avatar name={playerB} color={colorB} />
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                          {rows.map(([label, va, vb]) => {
+                            const total = va + vb;
+                            const pctA = total > 0 ? (va / total) * 100 : 50;
+                            const pctB = 100 - pctA;
+                            return (
+                                <div key={label}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginBottom: 6 }}>
+                                    <span style={{ fontWeight: 700, color: va >= vb ? colorA : PALETTE.iceDim }}>{va}</span>
+                                    <span style={{ color: PALETTE.iceDim, fontSize: 12 }}>{label}</span>
+                                    <span style={{ fontWeight: 700, color: vb >= va ? colorB : PALETTE.iceDim }}>{vb}</span>
+                                  </div>
+                                  <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', background: PALETTE.panelLine }}>
+                                    <div style={{ width: `${pctA}%`, background: colorA }} />
+                                    <div style={{ width: `${pctB}%`, background: colorB }} />
+                                  </div>
+                                </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                  );
+                })() : (
+                    <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Выберите двух разных игроков для сравнения.</div>
+                )}
+              </div>
+          )}
+
+          {tab === 'wrapped' && (
+              <div>
+                {seasonWrapped ? (
+                    <>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600, marginBottom: 4 }}>Итоги сезона {currentSeason}</div>
+                      <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 16 }}>{seasonWrapped.gamesCount} игр сыграно вместе</div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 16 }}>
+                        {seasonWrapped.topScorer && (
+                            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: 16 }}>
+                              <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><Trophy size={13} color={PALETTE.gold} /> Лучший бомбардир</div>
+                              <button onClick={() => openProfile(seasonWrapped.topScorer.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                                <Avatar name={seasonWrapped.topScorer.player} color={colorFor(seasonWrapped.topScorer.player)} />
+                                <div style={{ textAlign: 'left' }}>
+                                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topScorer.player}</div>
+                                  <div style={{ fontSize: 12, color: PALETTE.gold }}>{seasonWrapped.topScorer.points} очков</div>
+                                </div>
+                              </button>
+                            </div>
+                        )}
+                        {seasonWrapped.topAssist && seasonWrapped.topAssist.assists > 0 && (
+                            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                              <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Лучший ассистент</div>
+                              <button onClick={() => openProfile(seasonWrapped.topAssist.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                                <Avatar name={seasonWrapped.topAssist.player} color={colorFor(seasonWrapped.topAssist.player)} />
+                                <div style={{ textAlign: 'left' }}>
+                                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.topAssist.player}</div>
+                                  <div style={{ fontSize: 12, color: PALETTE.steel }}>{seasonWrapped.topAssist.assists} передач</div>
+                                </div>
+                              </button>
+                            </div>
+                        )}
+                        {seasonWrapped.bestGame && (
+                            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                              <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Игра сезона</div>
+                              <button onClick={() => openProfile(seasonWrapped.bestGame.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                                <Avatar name={seasonWrapped.bestGame.player} color={colorFor(seasonWrapped.bestGame.player)} />
+                                <div style={{ textAlign: 'left' }}>
+                                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.bestGame.player}</div>
+                                  <div style={{ fontSize: 12, color: PALETTE.red }}>{seasonWrapped.bestGame.points} очков ({fmtDate(seasonWrapped.bestGame.date)})</div>
+                                </div>
+                              </button>
+                            </div>
+                        )}
+                        {seasonWrapped.mostImproved && seasonWrapped.mostImproved.delta > 0 && (
+                            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                              <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><TrendingUp size={13} color={PALETTE.teal} /> Самый прогрессирующий</div>
+                              <button onClick={() => openProfile(seasonWrapped.mostImproved.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                                <Avatar name={seasonWrapped.mostImproved.player} color={colorFor(seasonWrapped.mostImproved.player)} />
+                                <div style={{ textAlign: 'left' }}>
+                                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, fontWeight: 600, color: PALETTE.ice }}>{seasonWrapped.mostImproved.player}</div>
+                                  <div style={{ fontSize: 12, color: PALETTE.teal }}>{seasonWrapped.mostImproved.prevPpg.toFixed(2)} → {seasonWrapped.mostImproved.curPpg.toFixed(2)} очк./игру</div>
+                                </div>
+                              </button>
+                            </div>
+                        )}
+                      </div>
+
+                      <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                        <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Общий зачёт компании</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: 12, fontSize: 13 }}>
+                          <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Голы</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.goals}</div></div>
+                          <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Передачи</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.assists}</div></div>
+                          <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Очки</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.points}</div></div>
+                          <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Хет-трики</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.hatTricks}</div></div>
+                          <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Покер+</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.poker}</div></div>
+                        </div>
+                      </div>
+                    </>
+                ) : (
+                    <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>В этом сезоне пока нет игр — итоги появятся, когда наберётся статистика.</div>
+                )}
+              </div>
+          )}
+
+          {tab === 'log' && (
+              <div>
+                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Добавить игру</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
+                    <div style={{ flex: '1 1 140px' }}>
+                      <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Игрок</label>
+                      {!newPlayerMode ? (
+                          <select
+                              value={form.player}
+                              onChange={(ev) => (ev.target.value === '__newplayer__' ? setNewPlayerMode(true) : setForm({ ...form, player: ev.target.value }))}
+                              className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          >
+                            {players.map((p) => <option key={p} value={p}>{p}</option>)}
+                            <option value="__newplayer__">+ новый игрок</option>
+                          </select>
+                      ) : (
+                          <div style={{ display: 'flex', gap: 4 }}>
+                            <input
+                                autoFocus
+                                placeholder="Имя"
+                                onKeyDown={(ev) => { if (ev.key === 'Enter') { ev.preventDefault(); handleAddPlayer(ev.target.value); } }}
+                                className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                            />
+                            <button type="button" onClick={() => setNewPlayerMode(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={16} /></button>
+                          </div>
+                      )}
+                    </div>
+                    <div style={{ flex: '1 1 140px' }}>
+                      <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Дата</label>
+                      <input
+                          type="date" value={form.date}
+                          onChange={(ev) => setForm({ ...form, date: ev.target.value, matchChoice: '__new__', newMatchLabel: '' })}
+                          className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      />
+                    </div>
+                    <div style={{ flex: '0 1 80px' }}>
+                      <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Голы</label>
+                      <input
+                          type="number" min="0" value={form.goals}
+                          onChange={(ev) => setForm({ ...form, goals: ev.target.value })}
+                          className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      />
+                    </div>
+                    <div style={{ flex: '0 1 80px' }}>
+                      <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Передачи</label>
+                      <input
+                          type="number" min="0" value={form.assists}
+                          onChange={(ev) => setForm({ ...form, assists: ev.target.value })}
+                          className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      />
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: 4 }}>
+                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Матч</label>
+                    {form.date && matchesForDate.length > 0 ? (
+                        <select
+                            value={form.matchChoice}
+                            onChange={(ev) => setForm({ ...form, matchChoice: ev.target.value })}
+                            className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13, marginBottom: 6 }}
+                        >
+                          {matchesForDate.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+                          <option value="__new__">+ своя игра (не из списка)</option>
+                        </select>
+                    ) : (
+                        <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 6 }}>
+                          {form.date ? 'На эту дату ещё никто не заносил игру — введите свою ниже.' : 'Сначала выберите дату.'}
+                        </div>
+                    )}
+                    {form.matchChoice === '__new__' && (
+                        <input
+                            placeholder="Легион - Соперник 5:3 (или оставьте пустым — будет «Игровая тренировка»)"
+                            value={form.newMatchLabel}
+                            onChange={(ev) => setForm({ ...form, newMatchLabel: ev.target.value })}
+                            className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                        />
+                    )}
+                  </div>
+                  <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 12 }}>
+                    Если в этот день уже кто-то занёс игру — выберите её из списка, чтобы одна и та же игра не считалась дважды.
+                  </div>
+                  <button
+                      type="button" disabled={saving} onClick={handleAddGame}
+                      style={{ display: 'flex', alignItems: 'center', gap: 6, background: PALETTE.red, color: PALETTE.ice, border: 'none', borderRadius: 4, padding: '9px 16px', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: saving ? 0.6 : 1 }}
+                  >
+                    <Plus size={15} /> {saving ? 'Сохраняем…' : 'Записать игру'}
+                  </button>
+                  {formNotice && (
+                      <div
+                          style={{
+                            marginTop: 10, fontSize: 13, padding: '8px 12px', borderRadius: 4,
+                            color: formNotice.type === 'error' ? PALETTE.red : PALETTE.teal,
+                            background: formNotice.type === 'error' ? 'rgba(200,40,63,0.12)' : 'rgba(46,156,143,0.12)',
+                            border: `1px solid ${formNotice.type === 'error' ? PALETTE.red : PALETTE.teal}`,
+                          }}
+                      >
+                        {formNotice.text}
+                      </div>
                   )}
                 </div>
-                <div style={{ flex: '1 1 140px' }}>
-                  <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Дата</label>
-                  <input
-                    type="date" value={form.date}
-                    onChange={(ev) => setForm({ ...form, date: ev.target.value, matchChoice: '__new__', newMatchLabel: '' })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                  />
-                </div>
-                <div style={{ flex: '0 1 80px' }}>
-                  <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Голы</label>
-                  <input
-                    type="number" min="0" value={form.goals}
-                    onChange={(ev) => setForm({ ...form, goals: ev.target.value })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                  />
-                </div>
-                <div style={{ flex: '0 1 80px' }}>
-                  <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Передачи</label>
-                  <input
-                    type="number" min="0" value={form.assists}
-                    onChange={(ev) => setForm({ ...form, assists: ev.target.value })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                  />
-                </div>
-              </div>
-              <div style={{ marginBottom: 4 }}>
-                <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Матч</label>
-                {form.date && matchesForDate.length > 0 ? (
-                  <select
-                    value={form.matchChoice}
-                    onChange={(ev) => setForm({ ...form, matchChoice: ev.target.value })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13, marginBottom: 6 }}
-                  >
-                    {matchesForDate.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
-                    <option value="__new__">+ своя игра (не из списка)</option>
-                  </select>
-                ) : (
-                  <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 6 }}>
-                    {form.date ? 'На эту дату ещё никто не заносил игру — введите свою ниже.' : 'Сначала выберите дату.'}
-                  </div>
-                )}
-                {form.matchChoice === '__new__' && (
-                  <input
-                    placeholder="Легион - Соперник 5:3 (или оставьте пустым — будет «Игровая тренировка»)"
-                    value={form.newMatchLabel}
-                    onChange={(ev) => setForm({ ...form, newMatchLabel: ev.target.value })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                  />
-                )}
-              </div>
-              <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 12 }}>
-                Если в этот день уже кто-то занёс игру — выберите её из списка, чтобы одна и та же игра не считалась дважды.
-              </div>
-              <button
-                type="button" disabled={saving} onClick={handleAddGame}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: PALETTE.red, color: PALETTE.ice, border: 'none', borderRadius: 4, padding: '9px 16px', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: saving ? 0.6 : 1 }}
-              >
-                <Plus size={15} /> {saving ? 'Сохраняем…' : 'Записать игру'}
-              </button>
-              {formNotice && (
-                <div
-                  style={{
-                    marginTop: 10, fontSize: 13, padding: '8px 12px', borderRadius: 4,
-                    color: formNotice.type === 'error' ? PALETTE.red : PALETTE.teal,
-                    background: formNotice.type === 'error' ? 'rgba(200,40,63,0.12)' : 'rgba(46,156,143,0.12)',
-                    border: `1px solid ${formNotice.type === 'error' ? PALETTE.red : PALETTE.teal}`,
-                  }}
-                >
-                  {formNotice.text}
-                </div>
-              )}
-            </div>
 
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
-                <span style={{ fontSize: 13, color: PALETTE.iceDim }}>Игры сезона {currentSeason}</span>
-                <button
-                  onClick={handleExportCsv}
-                  style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.iceDim, borderRadius: 4, padding: '5px 10px', fontSize: 12, cursor: 'pointer' }}
-                >
-                  Скачать CSV (для таблицы)
-                </button>
-              </div>
-              {recentEntries.map((e) => (
-                <div key={e.id} className="ht-row" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 10px', padding: '10px 16px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 auto', minWidth: 0 }}>
-                    <span style={{ color: PALETTE.iceDim, flexShrink: 0 }}>{fmtDate(e.date)}</span>
+                <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
+                    <span style={{ fontSize: 13, color: PALETTE.iceDim }}>Игры сезона {currentSeason}</span>
                     <button
-                      onClick={() => openProfile(e.player)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer', flexShrink: 0 }}
+                        onClick={handleExportCsv}
+                        style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.iceDim, borderRadius: 4, padding: '5px 10px', fontSize: 12, cursor: 'pointer' }}
                     >
-                      <Avatar name={e.player} color={colorFor(e.player)} size={24} />
-                      <span style={{ fontWeight: 600, color: PALETTE.ice }}>{e.player}</span>
+                      Скачать CSV (для таблицы)
                     </button>
-                    <span style={{ flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 auto', minWidth: 0 }}>
-                    <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{matchLabel(e.matchId)}</span>
-                    <button onClick={() => setConfirmDeleteId(e.id)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}><X size={14} /></button>
-                  </div>
+                  {recentEntries.map((e) => (
+                      <div key={e.id} className="ht-row" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 10px', padding: '10px 16px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 auto', minWidth: 0 }}>
+                          <span style={{ color: PALETTE.iceDim, flexShrink: 0 }}>{fmtDate(e.date)}</span>
+                          <button
+                              onClick={() => openProfile(e.player)}
+                              style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer', flexShrink: 0 }}
+                          >
+                            <Avatar name={e.player} color={colorFor(e.player)} size={24} />
+                            <span style={{ fontWeight: 600, color: PALETTE.ice }}>{e.player}</span>
+                          </button>
+                          <span style={{ flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 auto', minWidth: 0 }}>
+                          <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{matchLabel(e.matchId)}</span>
+                          <button onClick={() => setConfirmDeleteId(e.id)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}><X size={14} /></button>
+                        </div>
+                      </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+          )}
+
+          <div style={{ marginTop: 20, fontSize: 12, color: PALETTE.iceDim, textAlign: 'center' }}>
+            Данные общие: их видят и могут дополнять все, у кого есть ссылка на это приложение.
           </div>
-        )}
-
-        <div style={{ marginTop: 20, fontSize: 12, color: PALETTE.iceDim, textAlign: 'center' }}>
-          Данные общие: их видят и могут дополнять все, у кого есть ссылка на это приложение.
         </div>
-      </div>
 
-      {entryToDelete && (
-        <div
-          onClick={() => setConfirmDeleteId(null)}
-          style={{
-            position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 50,
-          }}
-        >
-          <div
-            onClick={(ev) => ev.stopPropagation()}
-            className="ht-modal-box"
-            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
-          >
-            <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Удалить запись?</div>
-            <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 4 }}>
-              {fmtDate(entryToDelete.date)} · {entryToDelete.player} · {entryToDelete.goals}Г {entryToDelete.assists}П
-            </div>
-            <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>{matchLabel(entryToDelete.matchId)}</div>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button
+        {entryToDelete && (
+            <div
                 onClick={() => setConfirmDeleteId(null)}
-                style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                style={{
+                  position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 50,
+                }}
+            >
+              <div
+                  onClick={(ev) => ev.stopPropagation()}
+                  className="ht-modal-box"
+                  style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
               >
-                Отмена
-              </button>
-              <button
-                onClick={() => handleDelete(entryToDelete.id)}
-                style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
-              >
-                Удалить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {confirmDeleteGoal && (
-        <div
-          onClick={() => setConfirmDeleteGoal(null)}
-          style={{
-            position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
-            alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 60,
-          }}
-        >
-          <div
-            onClick={(ev) => ev.stopPropagation()}
-            className="ht-modal-box"
-            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
-          >
-            <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Сбросить цель?</div>
-            <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>
-              Цель «{profileGoals[confirmDeleteGoal]} {GOAL_METRICS.find((m) => m.key === confirmDeleteGoal)?.label}» на сезон {currentSeason} для {profilePlayer} будет удалена.
-            </div>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => setConfirmDeleteGoal(null)}
-                style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
-              >
-                Отмена
-              </button>
-              <button
-                onClick={() => handleDeleteGoal(confirmDeleteGoal)}
-                style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
-              >
-                Сбросить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {profilePlayer && profileStats && (
-        <div
-          onClick={() => setProfilePlayer(null)}
-          style={{
-            position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.75)', display: 'flex',
-            alignItems: 'flex-start', justifyContent: 'center', padding: 20, zIndex: 50, overflowY: 'auto',
-          }}
-        >
-          <div
-            onClick={(ev) => ev.stopPropagation()}
-            className="ht-modal-box"
-            style={{ background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 560, width: '100%', marginTop: 30 }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <Avatar name={profilePlayer} color={colorFor(profilePlayer)} size={44} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600 }}>{profilePlayer}</div>
-                  {computeTrend(profileStats) === 'up' && <TrendingUp size={18} color={PALETTE.gold} title="В ударе" />}
-                  {computeTrend(profileStats) === 'down' && <TrendingDown size={18} color={PALETTE.iceDim} title="Спад формы" />}
+                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Удалить запись?</div>
+                <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 4 }}>
+                  {fmtDate(entryToDelete.date)} · {entryToDelete.player} · {entryToDelete.goals}Г {entryToDelete.assists}П
                 </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button onClick={handleShareProfile} title="Поделиться" style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, color: PALETTE.iceDim, cursor: 'pointer', padding: 6, display: 'flex' }}><Share2 size={16} /></button>
-                <button onClick={() => setProfilePlayer(null)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={18} /></button>
-              </div>
-            </div>
-            {shareNotice && (
-              <div style={{ fontSize: 12, color: PALETTE.teal, marginBottom: 10 }}>{shareNotice}</div>
-            )}
-
-            {!editingProfile ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 13, color: PALETTE.iceDim }}>
-                  {bioParts.length > 0 ? bioParts.join(' · ') : 'Данные игрока не указаны'}
-                </div>
-                <button
-                  onClick={() => setEditingProfile(true)}
-                  style={{ background: 'none', border: 'none', color: PALETTE.steel, fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  Изменить
-                </button>
-              </div>
-            ) : (
-              <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
-                  <div style={{ flex: '1 1 140px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Имя</label>
-                    <input
-                      value={editForm.name}
-                      onChange={(ev) => setEditForm({ ...editForm, name: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                  </div>
-                  <div style={{ flex: '0 1 80px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Номер</label>
-                    <input
-                      value={editForm.number}
-                      onChange={(ev) => setEditForm({ ...editForm, number: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                  </div>
-                  <div style={{ flex: '1 1 140px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Дата рождения</label>
-                    <input
-                      type="date" value={editForm.birthDate}
-                      onChange={(ev) => setEditForm({ ...editForm, birthDate: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                  </div>
-                  <div style={{ flex: '1 1 140px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Амплуа</label>
-                    <select
-                      value={editForm.position}
-                      onChange={(ev) => setEditForm({ ...editForm, position: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    >
-                      <option value="">Не указано</option>
-                      <option value="Нападающий">Нападающий</option>
-                      <option value="Защитник">Защитник</option>
-                      <option value="Вратарь">Вратарь</option>
-                    </select>
-                  </div>
-                  <div style={{ flex: '0 1 90px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Рост, см</label>
-                    <input
-                      type="number" value={editForm.heightCm}
-                      onChange={(ev) => setEditForm({ ...editForm, heightCm: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                  </div>
-                  <div style={{ flex: '0 1 90px' }}>
-                    <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Вес, кг</label>
-                    <input
-                      type="number" value={editForm.weightKg}
-                      onChange={(ev) => setEditForm({ ...editForm, weightKg: ev.target.value })}
-                      className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                  </div>
-                </div>
-                {profileEditError && (
-                  <div style={{ fontSize: 12, color: PALETTE.red, marginBottom: 8 }}>{profileEditError}</div>
-                )}
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>{matchLabel(entryToDelete.matchId)}</div>
+                <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
                   <button
-                    onClick={handleSaveProfile}
-                    style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
-                  >
-                    Сохранить
-                  </button>
-                  <button
-                    onClick={() => setEditingProfile(false)}
-                    style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                      onClick={() => setConfirmDeleteId(null)}
+                      style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
                   >
                     Отмена
                   </button>
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16, fontSize: 13, background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14 }} className="ht-panel">
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Карьера</span><span style={{ fontWeight: 700 }}>{profileStats.points} очков за {profileStats.gp} игр</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Г/П</span><span style={{ fontWeight: 700 }}>{profileStats.goals}/{profileStats.assists}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Очков/игру</span><span style={{ fontWeight: 700 }}>{profileStats.ppg.toFixed(2)}</span></div>
-              {profileStats.multiPointGames > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Игры с 2+ очками</span><span style={{ fontWeight: 700 }}>{profileStats.multiPointGames}</span></div>
-              )}
-              {profileStats.hatTricks > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Хет-трики</span><span style={{ fontWeight: 700 }}>{profileStats.hatTricks}</span></div>
-              )}
-              {profileStats.pokerGames > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Покер (4+ гола)</span><span style={{ fontWeight: 700 }}>{profileStats.pokerGames}</span></div>
-              )}
-              {profileStats.pentaTricks > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.purple }}>Пента-трик (5 голов)</span><span style={{ fontWeight: 700, color: PALETTE.purple }}>{profileStats.pentaTricks}</span></div>
-              )}
-              {profileStats.goalMadness > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.red }}>Голевое безумие (6+)</span><span style={{ fontWeight: 700, color: PALETTE.red }}>{profileStats.goalMadness}</span></div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: PALETTE.iceDim }}>Лучшая игра</span>
-                <span style={{ fontWeight: 700 }}>{profileStats.bestGame ? `${profileStats.bestGame.points} очк. (${fmtDate(profileStats.bestGame.date)})` : '—'}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: PALETTE.iceDim }}>Текущая серия</span>
-                <span style={{ fontWeight: 700, color: profileStats.currentStreak >= 3 ? PALETTE.gold : PALETTE.ice }}>{profileStats.currentStreak} игр подряд с очком</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Лучшая серия</span><span style={{ fontWeight: 700 }}>{profileStats.longestStreak}</span></div>
-              {seasonAwards.points[profilePlayer] > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим бомбардиром</span><span style={{ fontWeight: 700 }}>{seasonAwards.points[profilePlayer]}</span></div>
-              )}
-              {seasonAwards.goals[profilePlayer] > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим снайпером</span><span style={{ fontWeight: 700 }}>{seasonAwards.goals[profilePlayer]}</span></div>
-              )}
-              {seasonAwards.assists[profilePlayer] > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим ассистентом</span><span style={{ fontWeight: 700 }}>{seasonAwards.assists[profilePlayer]}</span></div>
-              )}
-              {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000].filter((m) => profileStats.points >= m).slice(-1).map((m) => (
-                <div key={m} style={{ fontSize: 12, color: PALETTE.gold, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ очков</div>
-              ))}
-              {MILESTONES_50.filter((m) => profileStats.goals >= m).slice(-1).map((m) => (
-                <div key={`goals${m}`} style={{ fontSize: 12, color: PALETTE.red, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ голов</div>
-              ))}
-              {MILESTONES_50.filter((m) => profileStats.assists >= m).slice(-1).map((m) => (
-                <div key={`a${m}`} style={{ fontSize: 12, color: PALETTE.steel, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ передач</div>
-              ))}
-              {MILESTONES_50.filter((m) => profileStats.gp >= m).slice(-1).map((m) => (
-                <div key={`g${m}`} style={{ fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ игр</div>
-              ))}
-              {(() => {
-                const nm = nearestMilestone(profileStats);
-                if (!nm || nm.remaining > 20) return null;
-                return (
-                  <div style={{ marginTop: 4, fontSize: 12, color: PALETTE.ice, background: 'rgba(211,166,37,0.12)', border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: '5px 8px' }}>
-                    Почти! До клуба {nm.target}+ {nm.label} осталось {nm.remaining}
-                  </div>
-                );
-              })()}
-            </div>
-
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }} className="ht-panel">
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Цели на сезон {currentSeason}</div>
-
-              {setGoalMetrics.length === 0 && !addingGoal && (
-                <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 10 }}>Целей пока нет</div>
-              )}
-
-              {setGoalMetrics.map((metric) => {
-                const target = profileGoals[metric];
-                const current = metricValue(seasonStats.byPlayer[profilePlayer], metric);
-                const label = GOAL_METRICS.find((m) => m.key === metric)?.label;
-                const done = current >= target;
-                return (
-                  <div key={metric} style={{ marginBottom: 12 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                      <span style={{ color: PALETTE.iceDim }}>{current} из {target} {label}</span>
-                      <button onClick={() => setConfirmDeleteGoal(metric)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
-                    </div>
-                    <div style={{ height: 8, borderRadius: 4, background: PALETTE.panelLine, overflow: 'hidden' }}>
-                      <div style={{ width: `${Math.min(100, (current / target) * 100)}%`, height: '100%', background: done ? PALETTE.teal : PALETTE.gold }} />
-                    </div>
-                    {done && (
-                      <div style={{ marginTop: 6, fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}><Sparkles size={13} /> Цель достигнута!</div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {availableGoalMetrics.length > 0 && (
-                addingGoal ? (
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <input
-                      type="number" min="1" placeholder="Число" value={goalInput}
-                      onChange={(ev) => setGoalInput(ev.target.value)}
-                      className="ht-form-input"
-                      style={{ flex: '1 1 80px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    />
-                    <select
-                      value={goalMetric}
-                      onChange={(ev) => setGoalMetric(ev.target.value)}
-                      className="ht-form-input"
-                      style={{ flex: '1 1 120px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
-                    >
-                      {availableGoalMetrics.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
-                    </select>
-                    <button
-                      onClick={handleSetGoal}
-                      style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
-                    >
-                      Задать
-                    </button>
-                    <button
-                      onClick={() => setAddingGoal(false)}
-                      style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ) : (
                   <button
-                    onClick={() => { setGoalMetric(availableGoalMetrics[0].key); setAddingGoal(true); }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: `1px dashed ${PALETTE.panelLine}`, color: PALETTE.iceDim, borderRadius: 4, padding: '8px 12px', fontSize: 13, cursor: 'pointer', width: '100%', justifyContent: 'center' }}
+                      onClick={() => handleDelete(entryToDelete.id)}
+                      style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
                   >
-                    <Plus size={14} /> Добавить цель
+                    Удалить
                   </button>
-                )
-              )}
-            </div>
-
-            {profileSeasonHistory.length > 0 && (
-              <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
-                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 8 }}>Очки по сезонам</div>
-                <ResponsiveContainer width="100%" height={160}>
-                  <BarChart data={profileSeasonHistory} margin={{ left: -10, right: 10 }}>
-                    <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
-                    <XAxis dataKey="season" stroke={PALETTE.iceDim} fontSize={11} />
-                    <YAxis stroke={PALETTE.iceDim} fontSize={11} />
-                    <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
-                    <Bar dataKey="Очки" fill={colorFor(profilePlayer)} radius={[3, 3, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-
-            {profileHeatmap.length > 0 && (
-              <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16, overflowX: 'auto' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
-                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14 }}>Дни игр</div>
-                  <select
-                    value={activeProfileSeason || ''}
-                    onChange={(ev) => setProfileSeason(ev.target.value)}
-                    style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.gold, borderRadius: 4, padding: '4px 8px', fontSize: 12 }}
-                  >
-                    {seasons.map((s) => <option key={s} value={s} style={{ background: PALETTE.navy }}>{s}</option>)}
-                  </select>
                 </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateRows: 'repeat(7, 11px)',
-                    gridTemplateColumns: `repeat(${profileHeatmap.length}, 11px)`,
-                    gridAutoFlow: 'column',
-                    gap: 3,
-                    width: 'max-content',
-                  }}
-                >
-                  {profileHeatmap.flatMap((week, wi) =>
-                    week.map((day, di) => (
-                      <div
-                        key={`${wi}-${di}`}
-                        title={day ? `${fmtDate(day.date)}: ${day.points} очк.` : ''}
-                        style={{ width: 11, height: 11, borderRadius: 2, background: day ? heatColor(day.points) : 'transparent' }}
-                      />
-                    )),
+              </div>
+            </div>
+        )}
+
+        {confirmDeleteGoal && (
+            <div
+                onClick={() => setConfirmDeleteGoal(null)}
+                style={{
+                  position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 60,
+                }}
+            >
+              <div
+                  onClick={(ev) => ev.stopPropagation()}
+                  className="ht-modal-box"
+                  style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
+              >
+                <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Сбросить цель?</div>
+                <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>
+                  Цель «{profileGoals[confirmDeleteGoal]} {GOAL_METRICS.find((m) => m.key === confirmDeleteGoal)?.label}» на сезон {currentSeason} для {profilePlayer} будет удалена.
+                </div>
+                <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                  <button
+                      onClick={() => setConfirmDeleteGoal(null)}
+                      style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                  >
+                    Отмена
+                  </button>
+                  <button
+                      onClick={() => handleDeleteGoal(confirmDeleteGoal)}
+                      style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    Сбросить
+                  </button>
+                </div>
+              </div>
+            </div>
+        )}
+
+        {profilePlayer && profileStats && (
+            <div
+                onClick={() => setProfilePlayer(null)}
+                style={{
+                  position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.75)', display: 'flex',
+                  alignItems: 'flex-start', justifyContent: 'center', padding: 20, zIndex: 50, overflowY: 'auto',
+                }}
+            >
+              <div
+                  onClick={(ev) => ev.stopPropagation()}
+                  className="ht-modal-box"
+                  style={{ background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 560, width: '100%', marginTop: 30 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <Avatar name={profilePlayer} color={colorFor(profilePlayer)} size={44} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600 }}>{profilePlayer}</div>
+                      {computeTrend(profileStats) === 'up' && <TrendingUp size={18} color={PALETTE.gold} title="В ударе" />}
+                      {computeTrend(profileStats) === 'down' && <TrendingDown size={18} color={PALETTE.iceDim} title="Спад формы" />}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button onClick={handleShareProfile} title="Поделиться" style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, color: PALETTE.iceDim, cursor: 'pointer', padding: 6, display: 'flex' }}><Share2 size={16} /></button>
+                    <button onClick={() => setProfilePlayer(null)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={18} /></button>
+                  </div>
+                </div>
+                {shareNotice && (
+                    <div style={{ fontSize: 12, color: PALETTE.teal, marginBottom: 10 }}>{shareNotice}</div>
+                )}
+
+                {!editingProfile ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+                      <div style={{ fontSize: 13, color: PALETTE.iceDim }}>
+                        {bioParts.length > 0 ? bioParts.join(' · ') : 'Данные игрока не указаны'}
+                      </div>
+                      <button
+                          onClick={() => setEditingProfile(true)}
+                          style={{ background: 'none', border: 'none', color: PALETTE.steel, fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}
+                      >
+                        Изменить
+                      </button>
+                    </div>
+                ) : (
+                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
+                        <div style={{ flex: '1 1 140px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Имя</label>
+                          <input
+                              value={editForm.name}
+                              onChange={(ev) => setEditForm({ ...editForm, name: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          />
+                        </div>
+                        <div style={{ flex: '0 1 80px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Номер</label>
+                          <input
+                              value={editForm.number}
+                              onChange={(ev) => setEditForm({ ...editForm, number: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          />
+                        </div>
+                        <div style={{ flex: '1 1 140px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Дата рождения</label>
+                          <input
+                              type="date" value={editForm.birthDate}
+                              onChange={(ev) => setEditForm({ ...editForm, birthDate: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          />
+                        </div>
+                        <div style={{ flex: '1 1 140px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Амплуа</label>
+                          <select
+                              value={editForm.position}
+                              onChange={(ev) => setEditForm({ ...editForm, position: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          >
+                            <option value="">Не указано</option>
+                            <option value="Нападающий">Нападающий</option>
+                            <option value="Защитник">Защитник</option>
+                            <option value="Вратарь">Вратарь</option>
+                          </select>
+                        </div>
+                        <div style={{ flex: '0 1 90px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Рост, см</label>
+                          <input
+                              type="number" value={editForm.heightCm}
+                              onChange={(ev) => setEditForm({ ...editForm, heightCm: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          />
+                        </div>
+                        <div style={{ flex: '0 1 90px' }}>
+                          <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Вес, кг</label>
+                          <input
+                              type="number" value={editForm.weightKg}
+                              onChange={(ev) => setEditForm({ ...editForm, weightKg: ev.target.value })}
+                              className="ht-form-input"
+                              style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          />
+                        </div>
+                      </div>
+                      {profileEditError && (
+                          <div style={{ fontSize: 12, color: PALETTE.red, marginBottom: 8 }}>{profileEditError}</div>
+                      )}
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                            onClick={handleSaveProfile}
+                            style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                        >
+                          Сохранить
+                        </button>
+                        <button
+                            onClick={() => setEditingProfile(false)}
+                            style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                        >
+                          Отмена
+                        </button>
+                      </div>
+                    </div>
+                )}
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16, fontSize: 13, background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14 }} className="ht-panel">
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Карьера</span><span style={{ fontWeight: 700 }}>{profileStats.points} очков за {profileStats.gp} игр</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Г/П</span><span style={{ fontWeight: 700 }}>{profileStats.goals}/{profileStats.assists}</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Очков/игру</span><span style={{ fontWeight: 700 }}>{profileStats.ppg.toFixed(2)}</span></div>
+                  {profileStats.multiPointGames > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Игры с 2+ очками</span><span style={{ fontWeight: 700 }}>{profileStats.multiPointGames}</span></div>
+                  )}
+                  {profileStats.hatTricks > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Хет-трики</span><span style={{ fontWeight: 700 }}>{profileStats.hatTricks}</span></div>
+                  )}
+                  {profileStats.pokerGames > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Покер (4+ гола)</span><span style={{ fontWeight: 700 }}>{profileStats.pokerGames}</span></div>
+                  )}
+                  {profileStats.pentaTricks > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.purple }}>Пента-трик (5 голов)</span><span style={{ fontWeight: 700, color: PALETTE.purple }}>{profileStats.pentaTricks}</span></div>
+                  )}
+                  {profileStats.goalMadness > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.red }}>Голевое безумие (6+)</span><span style={{ fontWeight: 700, color: PALETTE.red }}>{profileStats.goalMadness}</span></div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: PALETTE.iceDim }}>Лучшая игра</span>
+                    <span style={{ fontWeight: 700 }}>{profileStats.bestGame ? `${profileStats.bestGame.points} очк. (${fmtDate(profileStats.bestGame.date)})` : '—'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: PALETTE.iceDim }}>Текущая серия</span>
+                    <span style={{ fontWeight: 700, color: profileStats.currentStreak >= 3 ? PALETTE.gold : PALETTE.ice }}>{profileStats.currentStreak} игр подряд с очком</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Лучшая серия</span><span style={{ fontWeight: 700 }}>{profileStats.longestStreak}</span></div>
+                  {seasonAwards.points[profilePlayer] > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим бомбардиром</span><span style={{ fontWeight: 700 }}>{seasonAwards.points[profilePlayer]}</span></div>
+                  )}
+                  {seasonAwards.goals[profilePlayer] > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим снайпером</span><span style={{ fontWeight: 700 }}>{seasonAwards.goals[profilePlayer]}</span></div>
+                  )}
+                  {seasonAwards.assists[profilePlayer] > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Сезонов лучшим ассистентом</span><span style={{ fontWeight: 700 }}>{seasonAwards.assists[profilePlayer]}</span></div>
+                  )}
+                  {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000].filter((m) => profileStats.points >= m).slice(-1).map((m) => (
+                      <div key={m} style={{ fontSize: 12, color: PALETTE.gold, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ очков</div>
+                  ))}
+                  {MILESTONES_50.filter((m) => profileStats.goals >= m).slice(-1).map((m) => (
+                      <div key={`goals${m}`} style={{ fontSize: 12, color: PALETTE.red, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ голов</div>
+                  ))}
+                  {MILESTONES_50.filter((m) => profileStats.assists >= m).slice(-1).map((m) => (
+                      <div key={`a${m}`} style={{ fontSize: 12, color: PALETTE.steel, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ передач</div>
+                  ))}
+                  {MILESTONES_50.filter((m) => profileStats.gp >= m).slice(-1).map((m) => (
+                      <div key={`g${m}`} style={{ fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}><Flame size={13} /> Клуб {m}+ игр</div>
+                  ))}
+                  {(() => {
+                    const nm = nearestMilestone(profileStats);
+                    if (!nm || nm.remaining > 20) return null;
+                    return (
+                        <div style={{ marginTop: 4, fontSize: 12, color: PALETTE.ice, background: 'rgba(211,166,37,0.12)', border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: '5px 8px' }}>
+                          Почти! До клуба {nm.target}+ {nm.label} осталось {nm.remaining}
+                        </div>
+                    );
+                  })()}
+                </div>
+
+                <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }} className="ht-panel">
+                  <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Цели на сезон {currentSeason}</div>
+
+                  {setGoalMetrics.length === 0 && !addingGoal && (
+                      <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 10 }}>Целей пока нет</div>
+                  )}
+
+                  {setGoalMetrics.map((metric) => {
+                    const target = profileGoals[metric];
+                    const current = metricValue(seasonStats.byPlayer[profilePlayer], metric);
+                    const label = GOAL_METRICS.find((m) => m.key === metric)?.label;
+                    const done = current >= target;
+                    return (
+                        <div key={metric} style={{ marginBottom: 12 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
+                            <span style={{ color: PALETTE.iceDim }}>{current} из {target} {label}</span>
+                            <button onClick={() => setConfirmDeleteGoal(metric)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
+                          </div>
+                          <div style={{ height: 8, borderRadius: 4, background: PALETTE.panelLine, overflow: 'hidden' }}>
+                            <div style={{ width: `${Math.min(100, (current / target) * 100)}%`, height: '100%', background: done ? PALETTE.teal : PALETTE.gold }} />
+                          </div>
+                          {done && (
+                              <div style={{ marginTop: 6, fontSize: 12, color: PALETTE.teal, display: 'flex', alignItems: 'center', gap: 4 }}><Sparkles size={13} /> Цель достигнута!</div>
+                          )}
+                        </div>
+                    );
+                  })}
+
+                  {availableGoalMetrics.length > 0 && (
+                      addingGoal ? (
+                          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                            <input
+                                type="number" min="1" placeholder="Число" value={goalInput}
+                                onChange={(ev) => setGoalInput(ev.target.value)}
+                                className="ht-form-input"
+                                style={{ flex: '1 1 80px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                            />
+                            <select
+                                value={goalMetric}
+                                onChange={(ev) => setGoalMetric(ev.target.value)}
+                                className="ht-form-input"
+                                style={{ flex: '1 1 120px', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                            >
+                              {availableGoalMetrics.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
+                            </select>
+                            <button
+                                onClick={handleSetGoal}
+                                style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
+                            >
+                              Задать
+                            </button>
+                            <button
+                                onClick={() => setAddingGoal(false)}
+                                style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+                      ) : (
+                          <button
+                              onClick={() => { setGoalMetric(availableGoalMetrics[0].key); setAddingGoal(true); }}
+                              style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: `1px dashed ${PALETTE.panelLine}`, color: PALETTE.iceDim, borderRadius: 4, padding: '8px 12px', fontSize: 13, cursor: 'pointer', width: '100%', justifyContent: 'center' }}
+                          >
+                            <Plus size={14} /> Добавить цель
+                          </button>
+                      )
                   )}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 11, color: PALETTE.iceDim }}>
-                  <span>Меньше</span>
-                  <div style={{ width: 11, height: 11, borderRadius: 2, background: PALETTE.panelLine }} />
-                  <div style={{ width: 11, height: 11, borderRadius: 2, background: 'rgba(211,166,37,0.35)' }} />
-                  <div style={{ width: 11, height: 11, borderRadius: 2, background: 'rgba(211,166,37,0.65)' }} />
-                  <div style={{ width: 11, height: 11, borderRadius: 2, background: PALETTE.gold }} />
-                  <span>Больше</span>
+
+                {profileSeasonHistory.length > 0 && (
+                    <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+                      <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 8 }}>Очки по сезонам</div>
+                      <ResponsiveContainer width="100%" height={160}>
+                        <BarChart data={profileSeasonHistory} margin={{ left: -10, right: 10 }}>
+                          <CartesianGrid stroke={PALETTE.panelLine} strokeDasharray="3 3" />
+                          <XAxis dataKey="season" stroke={PALETTE.iceDim} fontSize={11} />
+                          <YAxis stroke={PALETTE.iceDim} fontSize={11} />
+                          <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
+                          <Bar dataKey="Очки" fill={colorFor(profilePlayer)} radius={[3, 3, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                )}
+
+                {profileHeatmap.length > 0 && (
+                    <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16, overflowX: 'auto' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
+                        <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14 }}>Дни игр</div>
+                        <select
+                            value={activeProfileSeason || ''}
+                            onChange={(ev) => setProfileSeason(ev.target.value)}
+                            style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.gold, borderRadius: 4, padding: '4px 8px', fontSize: 12 }}
+                        >
+                          {seasons.map((s) => <option key={s} value={s} style={{ background: PALETTE.navy }}>{s}</option>)}
+                        </select>
+                      </div>
+                      <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateRows: 'repeat(7, 11px)',
+                            gridTemplateColumns: `repeat(${profileHeatmap.length}, 11px)`,
+                            gridAutoFlow: 'column',
+                            gap: 3,
+                            width: 'max-content',
+                          }}
+                      >
+                        {profileHeatmap.flatMap((week, wi) =>
+                            week.map((day, di) => (
+                                <div
+                                    key={`${wi}-${di}`}
+                                    title={day ? `${fmtDate(day.date)}: ${day.points} очк.` : ''}
+                                    style={{ width: 11, height: 11, borderRadius: 2, background: day ? heatColor(day.points) : 'transparent' }}
+                                />
+                            )),
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 11, color: PALETTE.iceDim }}>
+                        <span>Меньше</span>
+                        <div style={{ width: 11, height: 11, borderRadius: 2, background: PALETTE.panelLine }} />
+                        <div style={{ width: 11, height: 11, borderRadius: 2, background: 'rgba(211,166,37,0.35)' }} />
+                        <div style={{ width: 11, height: 11, borderRadius: 2, background: 'rgba(211,166,37,0.65)' }} />
+                        <div style={{ width: 11, height: 11, borderRadius: 2, background: PALETTE.gold }} />
+                        <span>Больше</span>
+                      </div>
+                    </div>
+                )}
+
+                <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+                  <div className="ht-row" style={{ padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Последние игры</div>
+                  {profileRecent.map((e) => (
+                      <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13 }}>
+                        <span style={{ color: PALETTE.iceDim, width: 78 }}>{fmtDate(e.date)}</span>
+                        <span style={{ width: 90 }}>{e.goals}Г {e.assists}П</span>
+                        <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
+                      </div>
+                  ))}
                 </div>
               </div>
-            )}
-
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
-              <div className="ht-row" style={{ padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Последние игры</div>
-              {profileRecent.map((e) => (
-                <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13 }}>
-                  <span style={{ color: PALETTE.iceDim, width: 78 }}>{fmtDate(e.date)}</span>
-                  <span style={{ width: 90 }}>{e.goals}Г {e.assists}П</span>
-                  <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
-                </div>
-              ))}
             </div>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
   );
 }
