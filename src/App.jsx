@@ -2195,6 +2195,7 @@ export default function HockeyTracker() {
               const breakdown = playerCategoryBreakdown(profilePlayer);
               const metricLabels = { points: 'Очки', goals: 'Голы', assists: 'Передачи', games: 'Игры' };
               const pieData = breakdown.map((c) => ({ name: c.category.name, value: c[profilePieMetric] })).filter((d) => d.value > 0);
+              const pieTotal = pieData.reduce((sum, d) => sum + d.value, 0);
               return (
                 <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
                   <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>По категориям (за всё время)</div>
@@ -2216,10 +2217,15 @@ export default function HockeyTracker() {
                   {pieData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={210}>
                       <PieChart>
-                        <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={75} label={(d) => d.value}>
+                        <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={75} label={(d) => `${d.value} (${pieTotal > 0 ? Math.round((d.value / pieTotal) * 100) : 0}%)`}>
                           {pieData.map((entry, i) => <Cell key={entry.name} fill={CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />)}
                         </Pie>
-                        <Tooltip contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }} />
+                        <Tooltip
+                          contentStyle={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, fontSize: 12 }}
+                          labelStyle={{ color: PALETTE.ice }}
+                          itemStyle={{ color: PALETTE.ice }}
+                          formatter={(value, name) => [`${value} (${pieTotal > 0 ? Math.round((value / pieTotal) * 100) : 0}%)`, name]}
+                        />
                         <Legend wrapperStyle={{ fontSize: 11 }} />
                       </PieChart>
                     </ResponsiveContainer>
