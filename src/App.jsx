@@ -279,8 +279,13 @@ export default function HockeyTracker() {
   const [profilePlayer, setProfilePlayer] = useState(null);
   const [profileSeason, setProfileSeason] = useState(null);
   const [profilePieMetric, setProfilePieMetric] = useState('points');
+  const [showAllGames, setShowAllGames] = useState(false);
+  const [allGamesScope, setAllGamesScope] = useState('season');
+  const [allGamesSeason, setAllGamesSeason] = useState(null);
   const [compareA, setCompareA] = useState(null);
   const [compareB, setCompareB] = useState(null);
+  const [compareScope, setCompareScope] = useState('all');
+  const [compareSeason, setCompareSeason] = useState(null);
   const [shareNotice, setShareNotice] = useState(null);
   const [goals, setGoals] = useState({});
   const [profiles, setProfiles] = useState({});
@@ -818,7 +823,7 @@ export default function HockeyTracker() {
   const categoryBreakdown = useMemo(() => {
     const byCat = {};
     categories.forEach((c) => { byCat[c.id] = { category: c, games: new Set(), goals: 0, assists: 0, points: 0 }; });
-    entries.forEach((e) => {
+    seasonEntries.forEach((e) => {
       const m = matchesById[e.matchId];
       if (!m) return;
       if (!byCat[m.categoryId]) return;
@@ -828,11 +833,11 @@ export default function HockeyTracker() {
       byCat[m.categoryId].points += e.goals + e.assists;
     });
     return Object.values(byCat).map((c) => ({ ...c, games: c.games.size })).filter((c) => c.games > 0);
-  }, [entries, matchesById, categories]);
-  function playerCategoryBreakdown(player) {
+  }, [seasonEntries, matchesById, categories]);
+  function playerCategoryBreakdown(player, entriesList = entries) {
     const byCat = {};
     categories.forEach((c) => { byCat[c.id] = { category: c, games: 0, goals: 0, assists: 0, points: 0 }; });
-    entries.filter((e) => e.player === player).forEach((e) => {
+    entriesList.filter((e) => e.player === player).forEach((e) => {
       const m = matchesById[e.matchId];
       if (!m || !byCat[m.categoryId]) return;
       byCat[m.categoryId].games += 1;
@@ -909,6 +914,16 @@ export default function HockeyTracker() {
   }, [currentSeason, seasonCountableEntries, seasonEntries, seasonStats, seasons, countableEntries, players, seasonGP]);
   const playerA = compareA && activeCareerPlayers.includes(compareA) ? compareA : activeCareerPlayers[0];
   const playerB = compareB && activeCareerPlayers.includes(compareB) ? compareB : activeCareerPlayers[1];
+  const activeCompareSeason = compareSeason || currentSeason;
+  const compareEntries = useMemo(
+    () => (compareScope === 'season' ? countableEntries.filter((e) => seasonLabel(e.date) === activeCompareSeason) : countableEntries),
+    [compareScope, activeCompareSeason, countableEntries],
+  );
+  const compareAllEntries = useMemo(
+    () => (compareScope === 'season' ? entries.filter((e) => seasonLabel(e.date) === activeCompareSeason) : entries),
+    [compareScope, activeCompareSeason, entries],
+  );
+  const compareStats = useMemo(() => computeStats(compareEntries, players), [compareEntries, players]);
   const profileStats = profilePlayer ? stats.byPlayer[profilePlayer] : null;
   const profileSeasonHistory = useMemo(
     () => (profilePlayer ? buildSeasonHistory(countableEntries, profilePlayer) : []),
@@ -922,6 +937,13 @@ export default function HockeyTracker() {
   const profileRecent = profilePlayer
     ? [...entries].filter((e) => e.player === profilePlayer).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10)
     : [];
+  const allGamesList = useMemo(() => {
+    if (!profilePlayer) return [];
+    return [...entries]
+      .filter((e) => e.player === profilePlayer)
+      .filter((e) => allGamesScope === 'all' || seasonLabel(e.date) === (allGamesSeason || currentSeason))
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }, [entries, profilePlayer, allGamesScope, allGamesSeason, currentSeason]);
 
   function openProfile(name) {
     setProfilePlayer(name);
@@ -932,6 +954,9 @@ export default function HockeyTracker() {
     setEditingProfile(false);
     setProfileEditError(null);
     setProfilePieMetric('points');
+    setShowAllGames(false);
+    setAllGamesScope('season');
+    setAllGamesSeason(currentSeason);
     const bio = profiles[name] || {};
     setEditForm({
       name,
@@ -1046,7 +1071,7 @@ export default function HockeyTracker() {
 
   if (loading) {
     return (
-      <div style={{ background: PALETTE.navy, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: PALETTE.ice, fontFamily: 'Manrope, sans-serif' }}>
+      <div style={{ background: PALETTE.navy, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: PALETTE.ice, fontFamily: 'Manrope, sans-serif' }}>
         Загружаем статистику…
       </div>
     );
@@ -1056,11 +1081,14 @@ export default function HockeyTracker() {
     <div className="ht-app" style={{ background: PALETTE.navy, minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+        html, body { background: ${PALETTE.navy}; }
         .ht-app, .ht-app *, .ht-app *::before, .ht-app *::after { box-sizing: border-box; }
-        .ht-app select, .ht-app input { min-width: 0; }
+        .ht-app select, .ht-app input, .ht-app div, .ht-app span, .ht-app label { min-width: 0; }
         .ht-app input[type=number]::-webkit-outer-spin-button,
         .ht-app input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .ht-app input[type=number] { -moz-appearance: textfield; }
+        .ht-app select, .ht-app input[type=date] { color-scheme: dark; }
+        .ht-app input[type=date]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.8; }
         @media (max-width: 480px) {
           .ht-app { padding: 12px 8px 24px !important; }
           .ht-hero-seg { padding: 10px 12px !important; }
@@ -1324,7 +1352,27 @@ export default function HockeyTracker() {
 
         {tab === 'compare' && (
           <div>
-            <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+              <select
+                value={compareScope}
+                onChange={(ev) => setCompareScope(ev.target.value)}
+                className="ht-form-input"
+                style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+              >
+                <option value="all">За всё время</option>
+                <option value="season">За сезон</option>
+              </select>
+              {compareScope === 'season' && (
+                <select
+                  value={activeCompareSeason || ''}
+                  onChange={(ev) => setCompareSeason(ev.target.value)}
+                  className="ht-form-input"
+                  style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                >
+                  {seasons.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              )}
+            </div>
             <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
               <select
                 value={playerA || ''}
@@ -1344,8 +1392,9 @@ export default function HockeyTracker() {
             </div>
 
             {playerA && playerB && playerA !== playerB ? (() => {
-              const a = stats.byPlayer[playerA];
-              const b = stats.byPlayer[playerB];
+              const a = compareStats.byPlayer[playerA];
+              const b = compareStats.byPlayer[playerB];
+              if (!a || !b) return <div style={{ fontSize: 13, color: PALETTE.iceDim, textAlign: 'center', padding: '20px 0' }}>Нет данных за этот период.</div>;
               const colorA = colorFor(playerA);
               const colorB = colorFor(playerB);
               const rows = [
@@ -1357,8 +1406,8 @@ export default function HockeyTracker() {
                 ['Хет-трики', a.hatTricks, b.hatTricks],
                 ['Игры с 2+ очками', a.multiPointGames, b.multiPointGames],
               ];
-              const aByCat = Object.fromEntries(playerCategoryBreakdown(playerA).map((c) => [c.category.id, c.games]));
-              const bByCat = Object.fromEntries(playerCategoryBreakdown(playerB).map((c) => [c.category.id, c.games]));
+              const aByCat = Object.fromEntries(playerCategoryBreakdown(playerA, compareAllEntries).map((c) => [c.category.id, c.games]));
+              const bByCat = Object.fromEntries(playerCategoryBreakdown(playerB, compareAllEntries).map((c) => [c.category.id, c.games]));
               categories.forEach((c) => {
                 const av = aByCat[c.id] || 0;
                 const bv = bByCat[c.id] || 0;
@@ -1487,7 +1536,7 @@ export default function HockeyTracker() {
 
                 {categoryBreakdown.length > 0 && (
                   <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-                    <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Игры по категориям (за всё время)</div>
+                    <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Игры по категориям (сезон {currentSeason})</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
                       {categoryBreakdown.map((c) => (
                         <div key={c.category.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -1818,7 +1867,7 @@ export default function HockeyTracker() {
           <div
             onClick={(ev) => ev.stopPropagation()}
             className="ht-modal-box"
-            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
+            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 400, width: '100%' }}
           >
             <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Удалить запись?</div>
             <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 4 }}>
@@ -1854,7 +1903,7 @@ export default function HockeyTracker() {
           <div
             onClick={(ev) => ev.stopPropagation()}
             className="ht-modal-box"
-            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 340, width: '100%' }}
+            style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 400, width: '100%' }}
           >
             <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Сбросить цель?</div>
             <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>
@@ -1889,7 +1938,7 @@ export default function HockeyTracker() {
           <div
             onClick={(ev) => ev.stopPropagation()}
             className="ht-modal-box"
-            style={{ background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 560, width: '100%', marginTop: 30 }}
+            style={{ background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 720, width: '100%', marginTop: 30 }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -2245,14 +2294,94 @@ export default function HockeyTracker() {
             })()}
 
             <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
-              <div className="ht-row" style={{ padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Последние игры</div>
-              {profileRecent.map((e) => (
-                <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13 }}>
-                  <span style={{ color: PALETTE.iceDim, width: 78 }}>{fmtDate(e.date)}</span>
-                  <span style={{ width: 90 }}>{e.goals}Г {e.assists}П</span>
-                  <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
+              <div className="ht-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>
+                <span>Последние игры</span>
+                <button
+                  onClick={() => setShowAllGames(true)}
+                  style={{ background: 'none', border: 'none', color: PALETTE.gold, fontSize: 12, cursor: 'pointer', padding: 0 }}
+                >
+                  Смотреть все игры →
+                </button>
+              </div>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                {profileRecent.map((e) => (
+                  <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13, minWidth: 'max-content' }}>
+                    <span style={{ color: PALETTE.iceDim, width: 78, flexShrink: 0 }}>{fmtDate(e.date)}</span>
+                    <span style={{ width: 90, flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                    <span style={{ color: PALETTE.iceDim, whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAllGames && profilePlayer && (
+        <div
+          onClick={() => setShowAllGames(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.75)', display: 'flex',
+            alignItems: 'flex-start', justifyContent: 'center', padding: 20, zIndex: 70, overflowY: 'auto',
+          }}
+        >
+          <div
+            onClick={(ev) => ev.stopPropagation()}
+            className="ht-modal-box"
+            style={{ background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 6, padding: 20, maxWidth: 640, width: '100%', marginTop: 30 }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 18, fontWeight: 600 }}>Все игры — {profilePlayer}</div>
+              <button onClick={() => setShowAllGames(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', padding: 4 }}><X size={18} /></button>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
+              <select
+                value={allGamesScope}
+                onChange={(ev) => setAllGamesScope(ev.target.value)}
+                className="ht-form-input"
+                style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+              >
+                <option value="season">За сезон</option>
+                <option value="all">За всё время</option>
+              </select>
+              {allGamesScope === 'season' && (
+                <select
+                  value={allGamesSeason || currentSeason || ''}
+                  onChange={(ev) => setAllGamesSeason(ev.target.value)}
+                  className="ht-form-input"
+                  style={{ background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                >
+                  {seasons.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              )}
+            </div>
+
+            <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 8 }}>Всего игр: {allGamesList.length}</div>
+
+            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+              <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <div className="ht-row" style={{ display: 'flex', gap: 10, padding: '8px 14px', fontSize: 11, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}`, minWidth: 'max-content' }}>
+                  <span style={{ width: 78, flexShrink: 0 }}>Дата</span>
+                  <span style={{ width: 90, flexShrink: 0 }}>Г/П</span>
+                  <span style={{ width: 140, flexShrink: 0 }}>Категория</span>
+                  <span>Матч</span>
                 </div>
-              ))}
+                {allGamesList.length > 0 ? allGamesList.map((e) => {
+                  const m = matchesById[e.matchId];
+                  const cat = m ? categories.find((c) => c.id === m.categoryId) : null;
+                  return (
+                    <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13, minWidth: 'max-content' }}>
+                      <span style={{ color: PALETTE.iceDim, width: 78, flexShrink: 0 }}>{fmtDate(e.date)}</span>
+                      <span style={{ width: 90, flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                      <span style={{ color: PALETTE.iceDim, width: 140, flexShrink: 0 }}>{cat?.name || '—'}</span>
+                      <span style={{ color: PALETTE.iceDim, whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
+                    </div>
+                  );
+                }) : (
+                  <div style={{ padding: '16px 14px', fontSize: 13, color: PALETTE.iceDim, textAlign: 'center' }}>Нет игр за этот период.</div>
+                )}
+              </div>
             </div>
           </div>
         </div>
