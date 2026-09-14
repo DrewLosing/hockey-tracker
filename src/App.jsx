@@ -9,8 +9,9 @@ import { supabase } from './supabaseClient';
 const PALETTE = {
   navy: '#0B1F33',
   navyDark: '#071522',
-  panel: '#12253A',
-  panelLine: '#233C56',
+  // Glassmorphism: panels/lines are translucent so backdrop-filter blur reads through them.
+  panel: 'rgba(255,255,255,0.07)',
+  panelLine: 'rgba(255,255,255,0.14)',
   ice: '#EAF2F6',
   iceDim: '#93A9BA',
   red: '#C8283F',
@@ -22,6 +23,78 @@ const PALETTE = {
 
 const PLAYER_COLORS = [PALETTE.red, PALETTE.steel, PALETTE.gold, PALETTE.teal, PALETTE.purple];
 const CATEGORY_COLORS = [PALETTE.red, PALETTE.steel, PALETTE.gold, PALETTE.teal, PALETTE.purple];
+
+// --- Shared style helpers (glassmorphism-elevated dark navy) --------------
+// Kept intentionally small: these cover the highest-repetition inline style
+// blocks (cards, buttons, inputs, headings). Narrow one-off layout tweaks
+// stay inline since a helper would add indirection without visual value.
+
+const glassCard = (padding = 16, extra = {}) => ({
+  background: `linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025))`,
+  border: `1px solid ${PALETTE.panelLine}`,
+  borderRadius: 14,
+  padding,
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  boxShadow: '0 10px 36px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.08)',
+  ...extra,
+});
+
+// Clips a gradient onto text — used to make hero numbers/stat highlights pop.
+const gradientText = (from, to, extra = {}) => ({
+  backgroundImage: `linear-gradient(135deg, ${from}, ${to})`,
+  WebkitBackgroundClip: 'text',
+  backgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  colorAdjust: 'exact',
+  ...extra,
+});
+
+const inputStyle = (extra = {}) => ({
+  width: '100%',
+  background: 'rgba(7,21,34,0.55)',
+  border: `1px solid ${PALETTE.panelLine}`,
+  color: PALETTE.ice,
+  borderRadius: 8,
+  padding: '8px 10px',
+  fontSize: 13,
+  ...extra,
+});
+
+const sectionTitle = (extra = {}) => ({
+  fontFamily: 'Oswald, sans-serif',
+  fontSize: 16,
+  marginBottom: 12,
+  letterSpacing: 0.2,
+  ...extra,
+});
+
+const primaryButtonStyle = (extra = {}) => ({
+  background: `linear-gradient(135deg, ${PALETTE.red}, #a41f34)`,
+  border: 'none',
+  color: PALETTE.ice,
+  borderRadius: 8,
+  padding: '9px 16px',
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: 'pointer',
+  minHeight: 40,
+  boxShadow: '0 4px 14px rgba(200,40,63,0.35)',
+  ...extra,
+});
+
+const secondaryButtonStyle = (extra = {}) => ({
+  background: 'rgba(255,255,255,0.06)',
+  border: `1px solid ${PALETTE.panelLine}`,
+  color: PALETTE.ice,
+  borderRadius: 8,
+  padding: '9px 16px',
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: 'pointer',
+  minHeight: 40,
+  ...extra,
+});
 
 // Shared "every 50" milestone ladder used for the goals/assists/games club badges.
 const MILESTONES_50 = Array.from({ length: 30 }, (_, i) => (i + 1) * 50);
@@ -1079,10 +1152,17 @@ export default function HockeyTracker() {
   }
 
   return (
-    <div className="ht-app" style={{ background: PALETTE.navy, minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
+    <div className="ht-app" style={{ minHeight: '100%', fontFamily: 'Manrope, sans-serif', color: PALETTE.ice, padding: '20px 16px 40px' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
-        html, body { background: ${PALETTE.navy}; }
+        html, body {
+          background:
+            radial-gradient(1100px circle at 12% -8%, rgba(200,40,63,0.22), transparent 55%),
+            radial-gradient(900px circle at 105% 0%, rgba(211,166,37,0.16), transparent 55%),
+            radial-gradient(1000px circle at 40% 115%, rgba(46,156,143,0.16), transparent 55%),
+            ${PALETTE.navyDark} !important;
+          background-attachment: fixed;
+          font-family: 'Manrope', sans-serif;
+        }
         .ht-app, .ht-app *, .ht-app *::before, .ht-app *::after { box-sizing: border-box; }
         .ht-app select, .ht-app input, .ht-app div, .ht-app span, .ht-app label { min-width: 0; }
         .ht-app input[type=number]::-webkit-outer-spin-button,
@@ -1090,6 +1170,62 @@ export default function HockeyTracker() {
         .ht-app input[type=number] { -moz-appearance: textfield; }
         .ht-app select, .ht-app input[type=date] { color-scheme: dark; }
         .ht-app input[type=date]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.8; }
+
+        /* Tabular numerals so stat digits align across the app. */
+        .ht-app { font-variant-numeric: tabular-nums; }
+
+        /* Glassmorphism cards: lift + brighten on hover for anything meant to feel interactive. */
+        .ht-panel, .ht-hero, .ht-modal-box {
+          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+        }
+        .ht-panel:hover {
+          border-color: rgba(255,255,255,0.2);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.34);
+        }
+        .ht-modal-box {
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+        }
+
+        /* Tabs: segmented pill control */
+        .ht-tab-btn { transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease; border-radius: 9px; }
+        .ht-tab-btn:not(.ht-tab-btn-active):hover { color: ${PALETTE.ice}; background: rgba(255,255,255,0.07); }
+
+        /* Rows (leaderboard / game log) get a subtle hover highlight. */
+        .ht-row { transition: background 200ms ease; }
+        .ht-row:hover { background: rgba(255,255,255,0.04); }
+
+        /* Form inputs: clear focus glow instead of the flat default outline. */
+        .ht-form-input, .ht-app select, .ht-app input {
+          transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+        }
+        .ht-form-input:focus, .ht-app select:focus, .ht-app input:focus {
+          outline: none;
+          border-color: ${PALETTE.gold};
+          box-shadow: 0 0 0 3px rgba(211,166,37,0.22);
+        }
+
+        /* Buttons: every clickable control gets a real hover/active state. */
+        .ht-app button, .ht-app [role="button"] { transition: transform 150ms ease, box-shadow 200ms ease, filter 200ms ease, background 200ms ease, border-color 200ms ease; }
+        .ht-app button:not(:disabled):hover, .ht-app [role="button"]:not(:disabled):hover { filter: brightness(1.12); }
+        .ht-app button:not(:disabled):active, .ht-app [role="button"]:not(:disabled):active { transform: translateY(1px); filter: brightness(0.97); }
+        .ht-app button:disabled, .ht-app [role="button"][aria-disabled="true"] { cursor: not-allowed; }
+
+        /* Keyboard focus visibility. */
+        .ht-app button:focus-visible,
+        .ht-app [role="button"]:focus-visible,
+        .ht-app a:focus-visible,
+        .ht-app input:focus-visible,
+        .ht-app select:focus-visible {
+          outline: 2px solid ${PALETTE.gold};
+          outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .ht-app, .ht-app * { transition: none !important; animation: none !important; }
+        }
+
         @media (max-width: 480px) {
           .ht-app { padding: 12px 8px 24px !important; }
           .ht-hero-seg { padding: 10px 12px !important; }
@@ -1097,35 +1233,42 @@ export default function HockeyTracker() {
           .ht-hero-season { font-size: 18px !important; }
           .ht-panel { padding: 10px !important; }
           .ht-tabs { padding-bottom: 2px !important; }
-          .ht-tab-btn { padding: 8px 8px !important; font-size: 12px !important; gap: 4px !important; }
+          .ht-tab-btn { padding: 8px 8px !important; font-size: 12px !important; gap: 4px !important; min-height: 44px; }
           .ht-modal-box { padding: 14px !important; }
           .ht-row { padding: 8px 10px !important; }
-          .ht-form-input { padding: 7px 8px !important; font-size: 13px !important; }
+          .ht-form-input { padding: 7px 8px !important; font-size: 13px !important; min-height: 40px; }
         }
       `}</style>
 
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
         {/* Scoreboard hero */}
-        <div style={{ border: `1px solid ${PALETTE.panelLine}`, background: PALETTE.navyDark, borderRadius: 4, overflow: 'hidden', marginBottom: 20 }}>
+        <div
+          className="ht-hero"
+          style={glassCard(0, {
+            overflow: 'hidden',
+            marginBottom: 20,
+            backgroundImage: `linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025)), linear-gradient(135deg, rgba(200,40,63,0.16), rgba(211,166,37,0.07) 55%, transparent)`,
+          })}
+        >
           <div style={{ display: 'flex', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
             <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', borderRight: `1px solid ${PALETTE.panelLine}`, minWidth: 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Сезон</div>
+              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6, textTransform: 'uppercase' }}>Сезон</div>
               <select
                 value={currentSeason || ''}
                 onChange={(e) => setSeason(e.target.value)}
                 className="ht-hero-season"
-                style={{ background: 'transparent', border: 'none', color: PALETTE.gold, fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600, outline: 'none', width: '100%' }}
+                style={{ background: 'transparent', border: 'none', color: PALETTE.gold, fontFamily: 'Oswald, sans-serif', fontSize: 24, fontWeight: 700, outline: 'none', width: '100%' }}
               >
                 {seasons.map((s) => <option key={s} value={s} style={{ background: PALETTE.navy }}>{s}</option>)}
               </select>
             </div>
             <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', minWidth: 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Игр сыграно</div>
-              <div className="ht-hero-num" style={{ fontFamily: 'Oswald, sans-serif', fontSize: 28, fontWeight: 600 }}>{seasonGP}</div>
+              <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6, textTransform: 'uppercase' }}>Игр сыграно</div>
+              <div className="ht-hero-num" style={{ fontFamily: 'Oswald, sans-serif', fontSize: 30, fontWeight: 700, ...gradientText(PALETTE.ice, '#a9c3d8') }}>{seasonGP}</div>
             </div>
           </div>
           <div className="ht-hero-seg" style={{ padding: '18px 20px' }}>
-            <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6 }}>Лидер по очкам</div>
+            <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6, textTransform: 'uppercase' }}>Лидер по очкам</div>
             {leader ? (
               <button
                 onClick={() => openProfile(leader.player)}
@@ -1134,7 +1277,7 @@ export default function HockeyTracker() {
                 <Avatar name={leader.player} color={colorFor(leader.player)} />
                 <div>
                   <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600, lineHeight: 1.1, color: PALETTE.ice }}>{leader.player}</div>
-                  <div style={{ color: PALETTE.gold, fontSize: 13 }}>{leader.points} очков</div>
+                  <div style={{ fontWeight: 700, fontSize: 14, ...gradientText(PALETTE.gold, '#f2d488') }}>{leader.points} очков</div>
                 </div>
               </button>
             ) : <div style={{ color: PALETTE.iceDim }}>Пока нет игр</div>}
@@ -1142,7 +1285,14 @@ export default function HockeyTracker() {
         </div>
 
         {/* Tabs */}
-        <div className="ht-tabs" style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: `1px solid ${PALETTE.panelLine}`, overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
+        <div
+          className="ht-tabs"
+          style={{
+            display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch',
+            background: 'rgba(255,255,255,0.04)', border: `1px solid ${PALETTE.panelLine}`, borderRadius: 12, padding: 4,
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           {[
             ['dashboard', 'Дашборд', TrendingUp],
             ['leaderboard', 'Рейтинг', Trophy],
@@ -1154,10 +1304,11 @@ export default function HockeyTracker() {
             <button
               key={key}
               onClick={() => setTab(key)}
-              className="ht-tab-btn"
+              className={`ht-tab-btn${tab === key ? ' ht-tab-btn-active' : ''}`}
               style={{
-                display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', background: 'none',
-                border: 'none', borderBottom: tab === key ? `2px solid ${PALETTE.red}` : '2px solid transparent',
+                display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', border: 'none',
+                background: tab === key ? `linear-gradient(135deg, ${PALETTE.red}, #a41f34)` : 'transparent',
+                boxShadow: tab === key ? '0 4px 14px rgba(200,40,63,0.35)' : 'none',
                 color: tab === key ? PALETTE.ice : PALETTE.iceDim, fontFamily: 'Manrope, sans-serif',
                 fontWeight: tab === key ? 700 : 500, fontSize: 14, cursor: 'pointer', flexShrink: 0,
               }}
@@ -1175,8 +1326,8 @@ export default function HockeyTracker() {
 
         {tab === 'dashboard' && (
           <div>
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Очки нарастающим итогом за сезон {currentSeason}</div>
+            <div className="ht-panel" style={glassCard(16, { marginBottom: 16 })}>
+              <div style={sectionTitle()}>Очки нарастающим итогом за сезон {currentSeason}</div>
               {cumulativeData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={260}>
                   <LineChart data={cumulativeData} margin={{ left: -10, right: 10 }}>
@@ -1193,8 +1344,8 @@ export default function HockeyTracker() {
               ) : <div style={{ color: PALETTE.iceDim, fontSize: 13 }}>Нет данных за этот сезон.</div>}
             </div>
 
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Голы и передачи за сезон</div>
+            <div className="ht-panel" style={glassCard(16)}>
+              <div style={sectionTitle()}>Голы и передачи за сезон</div>
               {totalsBar.length > 0 ? (
                 <ResponsiveContainer width="100%" height={240}>
                   <BarChart data={totalsBar} margin={{ left: -10, right: 10 }}>
@@ -1213,7 +1364,7 @@ export default function HockeyTracker() {
         )}
 
         {tab === 'leaderboard' && (
-          <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+          <div style={glassCard(0, { overflow: 'hidden' })}>
             <div className="ht-row" style={{ padding: '10px 16px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>Сезон {currentSeason}</div>
             <div className="ht-row" style={{ display: 'grid', gridTemplateColumns: '24px 1fr 34px 34px 34px 46px', padding: '10px 16px', fontSize: 11, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>
               <div>#</div><div>Игрок</div><div>Г</div><div>П</div><div>О</div><div>О/И</div>
@@ -1252,7 +1403,7 @@ export default function HockeyTracker() {
             <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 12 }}>За всю карьеру, все сезоны</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
               {stats.leaderboard.filter((p) => p.gp > 0).map((p) => (
-                <div key={p.player} className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                <div key={p.player} className="ht-panel" style={glassCard(16)}>
                   <button
                     onClick={() => openProfile(p.player)}
                     style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
@@ -1415,7 +1566,7 @@ export default function HockeyTracker() {
                 if (av > 0 || bv > 0) rows.push([c.name, av, bv]);
               });
               return (
-                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 20 }}>
+                <div className="ht-panel" style={glassCard(20)}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                     <button onClick={() => openProfile(playerA)} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                       <Avatar name={playerA} color={colorA} />
@@ -1464,7 +1615,7 @@ export default function HockeyTracker() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 16 }}>
                   {seasonWrapped.topScorer && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.gold}`, borderRadius: 4, padding: 16 }}>
+                    <div className="ht-panel" style={glassCard(16, { border: `1px solid ${PALETTE.gold}` })}>
                       <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><Trophy size={13} color={PALETTE.gold} /> Лучший бомбардир</div>
                       <button onClick={() => openProfile(seasonWrapped.topScorer.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <Avatar name={seasonWrapped.topScorer.player} color={colorFor(seasonWrapped.topScorer.player)} />
@@ -1476,7 +1627,7 @@ export default function HockeyTracker() {
                     </div>
                   )}
                   {seasonWrapped.topGoals && seasonWrapped.topGoals.goals > 0 && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                    <div className="ht-panel" style={glassCard(16)}>
                       <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Лучший снайпер</div>
                       <button onClick={() => openProfile(seasonWrapped.topGoals.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <Avatar name={seasonWrapped.topGoals.player} color={colorFor(seasonWrapped.topGoals.player)} />
@@ -1488,7 +1639,7 @@ export default function HockeyTracker() {
                     </div>
                   )}
                   {seasonWrapped.topAssist && seasonWrapped.topAssist.assists > 0 && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                    <div className="ht-panel" style={glassCard(16)}>
                       <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Лучший ассистент</div>
                       <button onClick={() => openProfile(seasonWrapped.topAssist.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <Avatar name={seasonWrapped.topAssist.player} color={colorFor(seasonWrapped.topAssist.player)} />
@@ -1500,7 +1651,7 @@ export default function HockeyTracker() {
                     </div>
                   )}
                   {seasonWrapped.bestGame && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                    <div className="ht-panel" style={glassCard(16)}>
                       <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8 }}>Игра сезона</div>
                       <button onClick={() => openProfile(seasonWrapped.bestGame.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <Avatar name={seasonWrapped.bestGame.player} color={colorFor(seasonWrapped.bestGame.player)} />
@@ -1512,7 +1663,7 @@ export default function HockeyTracker() {
                     </div>
                   )}
                   {seasonWrapped.mostImproved && seasonWrapped.mostImproved.delta > 0 && (
-                    <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                    <div className="ht-panel" style={glassCard(16)}>
                       <div style={{ fontSize: 11, color: PALETTE.iceDim, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}><TrendingUp size={13} color={PALETTE.teal} /> Самый прогрессирующий</div>
                       <button onClick={() => openProfile(seasonWrapped.mostImproved.player)} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
                         <Avatar name={seasonWrapped.mostImproved.player} color={colorFor(seasonWrapped.mostImproved.player)} />
@@ -1525,7 +1676,7 @@ export default function HockeyTracker() {
                   )}
                 </div>
 
-                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
+                <div className="ht-panel" style={glassCard(16, { marginBottom: 16 })}>
                   <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Общий зачёт компании</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: 12, fontSize: 13 }}>
                     <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Голы</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 20, fontWeight: 600 }}>{seasonWrapped.totals.goals}</div></div>
@@ -1537,7 +1688,7 @@ export default function HockeyTracker() {
                 </div>
 
                 {(seasonWrapped.record.wins + seasonWrapped.record.losses + seasonWrapped.record.draws) > 0 && (
-                  <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
+                  <div className="ht-panel" style={glassCard(16, { marginBottom: 16 })}>
                     <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Результаты в матчах со счётом</div>
                     <div style={{ display: 'flex', gap: 20, fontSize: 13 }}>
                       <div><div style={{ color: PALETTE.iceDim, fontSize: 11 }}>Победы</div><div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 22, fontWeight: 600, color: PALETTE.teal }}>{seasonWrapped.record.wins}</div></div>
@@ -1548,7 +1699,7 @@ export default function HockeyTracker() {
                 )}
 
                 {categoryBreakdown.length > 0 && (
-                  <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16 }}>
+                  <div className="ht-panel" style={glassCard(16)}>
                     <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Игры по категориям (сезон {currentSeason})</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
                       {categoryBreakdown.map((c) => (
@@ -1569,8 +1720,8 @@ export default function HockeyTracker() {
 
         {tab === 'log' && (
           <div>
-            <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 16, marginBottom: 16 }}>
-              <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 16, marginBottom: 12 }}>Добавить игру</div>
+            <div className="ht-panel" style={glassCard(16, { marginBottom: 16 })}>
+              <div style={sectionTitle()}>Добавить игру</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
                 <div style={{ flex: '1 1 140px' }}>
                   <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Игрок</label>
@@ -1578,7 +1729,7 @@ export default function HockeyTracker() {
                     <select
                       value={form.player}
                       onChange={(ev) => (ev.target.value === '__newplayer__' ? setNewPlayerMode(true) : setForm({ ...form, player: ev.target.value }))}
-                      className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      className="ht-form-input" style={inputStyle()}
                     >
                       {players.map((p) => <option key={p} value={p}>{p}</option>)}
                       <option value="__newplayer__">+ новый игрок</option>
@@ -1589,9 +1740,9 @@ export default function HockeyTracker() {
                         autoFocus
                         placeholder="Имя"
                         onKeyDown={(ev) => { if (ev.key === 'Enter') { ev.preventDefault(); handleAddPlayer(ev.target.value); } }}
-                        className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                        className="ht-form-input" style={inputStyle()}
                       />
-                      <button type="button" onClick={() => setNewPlayerMode(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={16} /></button>
+                      <button type="button" aria-label="Отменить добавление игрока" onClick={() => setNewPlayerMode(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={16} /></button>
                     </div>
                   )}
                 </div>
@@ -1600,7 +1751,7 @@ export default function HockeyTracker() {
                   <input
                     type="date" value={form.date}
                     onChange={(ev) => setForm({ ...form, date: ev.target.value, matchChoice: '__new__', ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' })}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                    className="ht-form-input" style={inputStyle()}
                   />
                 </div>
               </div>
@@ -1613,7 +1764,7 @@ export default function HockeyTracker() {
                     onChange={(ev) => (ev.target.value === '__newcat__'
                       ? setNewCategoryMode(true)
                       : setForm({ ...form, categoryId: ev.target.value, matchChoice: '__new__', ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' }))}
-                    className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                    className="ht-form-input" style={inputStyle()}
                   >
                     {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                     <option value="__newcat__">+ новая категория</option>
@@ -1624,7 +1775,7 @@ export default function HockeyTracker() {
                       autoFocus placeholder="Название категории (например, «Мастер-класс»)"
                       value={newCategoryForm.name}
                       onChange={(ev) => setNewCategoryForm({ ...newCategoryForm, name: ev.target.value })}
-                      className="ht-form-input" style={{ width: '100%', background: PALETTE.navy, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13, marginBottom: 8 }}
+                      className="ht-form-input" style={inputStyle({ background: PALETTE.navy, marginBottom: 8 })}
                     />
                     <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: PALETTE.iceDim, marginBottom: 6 }}>
                       <input type="checkbox" checked={newCategoryForm.countsStats} onChange={(ev) => setNewCategoryForm({ ...newCategoryForm, countsStats: ev.target.checked })} />
@@ -1641,8 +1792,8 @@ export default function HockeyTracker() {
                       </label>
                     )}
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <button type="button" onClick={handleAddCategory} style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '7px 12px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Создать</button>
-                      <button type="button" onClick={() => setNewCategoryMode(false)} style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '7px 12px', fontSize: 13, cursor: 'pointer' }}>Отмена</button>
+                      <button type="button" onClick={handleAddCategory} style={primaryButtonStyle({ minHeight: 'auto', padding: '7px 12px' })}>Создать</button>
+                      <button type="button" onClick={() => setNewCategoryMode(false)} style={secondaryButtonStyle({ minHeight: 'auto', padding: '7px 12px' })}>Отмена</button>
                     </div>
                   </div>
                 )}
@@ -1659,7 +1810,7 @@ export default function HockeyTracker() {
                         <select
                           value={form.matchChoice}
                           onChange={(ev) => setForm({ ...form, matchChoice: ev.target.value })}
-                          className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                          className="ht-form-input" style={inputStyle()}
                         >
                           {matchesForDate.map((m) => <option key={m.id} value={m.id}>{matchLabel(m.id)}</option>)}
                           <option value="__new__">+ своя игра (не из списка)</option>
@@ -1683,7 +1834,7 @@ export default function HockeyTracker() {
                               <select
                                 value={ownEffective}
                                 onChange={(ev) => setForm({ ...form, ownTeamChoice: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                className="ht-form-input" style={inputStyle()}
                               >
                                 {teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
                                 <option value="__new__">+ новая команда...</option>
@@ -1692,7 +1843,7 @@ export default function HockeyTracker() {
                                 <input
                                   placeholder="Название команды" value={form.newOwnTeamName}
                                   onChange={(ev) => setForm({ ...form, newOwnTeamName: ev.target.value })}
-                                  className="ht-form-input" style={{ width: '100%', marginTop: 6, background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                  className="ht-form-input" style={inputStyle({ marginTop: 6 })}
                                 />
                               )}
                             </div>
@@ -1701,7 +1852,7 @@ export default function HockeyTracker() {
                               <select
                                 value={oppEffective}
                                 onChange={(ev) => setForm({ ...form, opponentTeamChoice: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                className="ht-form-input" style={inputStyle()}
                               >
                                 <option value="__new__">+ новая команда...</option>
                                 {teams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
@@ -1710,7 +1861,7 @@ export default function HockeyTracker() {
                                 <input
                                   placeholder="Название команды" value={form.newOpponentTeamName}
                                   onChange={(ev) => setForm({ ...form, newOpponentTeamName: ev.target.value })}
-                                  className="ht-form-input" style={{ width: '100%', marginTop: 6, background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                  className="ht-form-input" style={inputStyle({ marginTop: 6 })}
                                 />
                               )}
                             </div>
@@ -1721,7 +1872,7 @@ export default function HockeyTracker() {
                               <input
                                 type="number" min="0" placeholder="—" value={form.scoreOwn}
                                 onChange={(ev) => setForm({ ...form, scoreOwn: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', textAlign: 'center', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 6px', fontSize: 13 }}
+                                className="ht-form-input" style={inputStyle({ textAlign: 'center', padding: '8px 6px' })}
                               />
                             </div>
                             <div style={{ paddingBottom: 9, color: PALETTE.iceDim, fontWeight: 700 }}>:</div>
@@ -1729,7 +1880,7 @@ export default function HockeyTracker() {
                               <input
                                 type="number" min="0" placeholder="—" value={form.scoreOpp}
                                 onChange={(ev) => setForm({ ...form, scoreOpp: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', textAlign: 'center', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 6px', fontSize: 13, marginTop: 21 }}
+                                className="ht-form-input" style={inputStyle({ textAlign: 'center', padding: '8px 6px', marginTop: 21 })}
                               />
                             </div>
                             <div style={{ flex: '1 1 140px' }}>
@@ -1737,7 +1888,7 @@ export default function HockeyTracker() {
                               <select
                                 value={form.finish}
                                 onChange={(ev) => setForm({ ...form, finish: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                className="ht-form-input" style={inputStyle()}
                               >
                                 {FINISH_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                               </select>
@@ -1756,7 +1907,7 @@ export default function HockeyTracker() {
                             <select
                               value={tourEffective}
                               onChange={(ev) => setForm({ ...form, tournamentChoice: ev.target.value })}
-                              className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                              className="ht-form-input" style={inputStyle()}
                             >
                               <option value="__new__">+ новый турнир...</option>
                               {tournaments.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
@@ -1765,7 +1916,7 @@ export default function HockeyTracker() {
                               <input
                                 placeholder="Название турнира" value={form.newTournamentName}
                                 onChange={(ev) => setForm({ ...form, newTournamentName: ev.target.value })}
-                                className="ht-form-input" style={{ width: '100%', marginTop: 6, background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                                className="ht-form-input" style={inputStyle({ marginTop: 6 })}
                               />
                             )}
                           </div>
@@ -1774,7 +1925,7 @@ export default function HockeyTracker() {
                             <select
                               value={form.stage}
                               onChange={(ev) => setForm({ ...form, stage: ev.target.value })}
-                              className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                              className="ht-form-input" style={inputStyle()}
                             >
                               <option value="">Не указана</option>
                               {STAGE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -1791,7 +1942,7 @@ export default function HockeyTracker() {
                           <input
                             type="number" min="0" value={form.goals}
                             onChange={(ev) => setForm({ ...form, goals: ev.target.value })}
-                            className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                            className="ht-form-input" style={inputStyle()}
                           />
                         </div>
                         <div style={{ flex: '0 1 90px' }}>
@@ -1799,7 +1950,7 @@ export default function HockeyTracker() {
                           <input
                             type="number" min="0" value={form.assists}
                             onChange={(ev) => setForm({ ...form, assists: ev.target.value })}
-                            className="ht-form-input" style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                            className="ht-form-input" style={inputStyle()}
                           />
                         </div>
                       </div>
@@ -1813,7 +1964,11 @@ export default function HockeyTracker() {
               </div>
               <button
                 type="button" disabled={saving} onClick={handleAddGame}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: PALETTE.red, color: PALETTE.ice, border: 'none', borderRadius: 4, padding: '9px 16px', fontWeight: 700, fontSize: 13, cursor: 'pointer', opacity: saving ? 0.6 : 1 }}
+                style={primaryButtonStyle({
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  opacity: saving ? 0.6 : 1,
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                })}
               >
                 <Plus size={15} /> {saving ? 'Сохраняем…' : 'Записать игру'}
               </button>
@@ -1831,7 +1986,7 @@ export default function HockeyTracker() {
               )}
             </div>
 
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+            <div style={glassCard(0, { overflow: 'hidden' })}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: `1px solid ${PALETTE.panelLine}` }}>
                 <span style={{ fontSize: 13, color: PALETTE.iceDim }}>Игры сезона {currentSeason}</span>
                 <button
@@ -1856,7 +2011,7 @@ export default function HockeyTracker() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 auto', minWidth: 0 }}>
                     <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{matchLabel(e.matchId)}</span>
-                    <button onClick={() => setConfirmDeleteId(e.id)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}><X size={14} /></button>
+                    <button aria-label="Удалить запись" onClick={() => setConfirmDeleteId(e.id)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', flexShrink: 0 }}><X size={14} /></button>
                   </div>
                 </div>
               ))}
@@ -1890,13 +2045,13 @@ export default function HockeyTracker() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setConfirmDeleteId(null)}
-                style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                style={secondaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
               >
                 Отмена
               </button>
               <button
                 onClick={() => handleDelete(entryToDelete.id)}
-                style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                style={primaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
               >
                 Удалить
               </button>
@@ -1925,13 +2080,13 @@ export default function HockeyTracker() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setConfirmDeleteGoal(null)}
-                style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                style={secondaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
               >
                 Отмена
               </button>
               <button
                 onClick={() => handleDeleteGoal(confirmDeleteGoal)}
-                style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                style={primaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
               >
                 Сбросить
               </button>
@@ -1963,8 +2118,8 @@ export default function HockeyTracker() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button onClick={handleShareProfile} title="Поделиться" style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, color: PALETTE.iceDim, cursor: 'pointer', padding: 6, display: 'flex' }}><Share2 size={16} /></button>
-                <button onClick={() => setProfilePlayer(null)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={18} /></button>
+                <button onClick={handleShareProfile} title="Поделиться" aria-label="Поделиться профилем" style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, color: PALETTE.iceDim, cursor: 'pointer', padding: 6, display: 'flex' }}><Share2 size={16} /></button>
+                <button onClick={() => setProfilePlayer(null)} aria-label="Закрыть профиль" style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer' }}><X size={18} /></button>
               </div>
             </div>
             {shareNotice && (
@@ -1984,7 +2139,7 @@ export default function HockeyTracker() {
                 </button>
               </div>
             ) : (
-              <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+              <div className="ht-panel" style={glassCard(14, { marginBottom: 16 })}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
                   <div style={{ flex: '1 1 140px' }}>
                     <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Имя</label>
@@ -1992,7 +2147,7 @@ export default function HockeyTracker() {
                       value={editForm.name}
                       onChange={(ev) => setEditForm({ ...editForm, name: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     />
                   </div>
                   <div style={{ flex: '0 1 80px' }}>
@@ -2001,7 +2156,7 @@ export default function HockeyTracker() {
                       value={editForm.number}
                       onChange={(ev) => setEditForm({ ...editForm, number: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     />
                   </div>
                   <div style={{ flex: '1 1 140px' }}>
@@ -2010,7 +2165,7 @@ export default function HockeyTracker() {
                       type="date" value={editForm.birthDate}
                       onChange={(ev) => setEditForm({ ...editForm, birthDate: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     />
                   </div>
                   <div style={{ flex: '1 1 140px' }}>
@@ -2019,7 +2174,7 @@ export default function HockeyTracker() {
                       value={editForm.position}
                       onChange={(ev) => setEditForm({ ...editForm, position: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     >
                       <option value="">Не указано</option>
                       <option value="Нападающий">Нападающий</option>
@@ -2033,7 +2188,7 @@ export default function HockeyTracker() {
                       type="number" value={editForm.heightCm}
                       onChange={(ev) => setEditForm({ ...editForm, heightCm: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     />
                   </div>
                   <div style={{ flex: '0 1 90px' }}>
@@ -2042,7 +2197,7 @@ export default function HockeyTracker() {
                       type="number" value={editForm.weightKg}
                       onChange={(ev) => setEditForm({ ...editForm, weightKg: ev.target.value })}
                       className="ht-form-input"
-                      style={{ width: '100%', background: PALETTE.navyDark, border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 10px', fontSize: 13 }}
+                      style={inputStyle()}
                     />
                   </div>
                 </div>
@@ -2052,13 +2207,13 @@ export default function HockeyTracker() {
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
                     onClick={handleSaveProfile}
-                    style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                    style={primaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
                   >
                     Сохранить
                   </button>
                   <button
                     onClick={() => setEditingProfile(false)}
-                    style={{ background: 'none', border: `1px solid ${PALETTE.panelLine}`, color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, cursor: 'pointer' }}
+                    style={secondaryButtonStyle({ minHeight: 'auto', padding: '8px 14px' })}
                   >
                     Отмена
                   </button>
@@ -2066,7 +2221,7 @@ export default function HockeyTracker() {
               </div>
             )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16, fontSize: 13, background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14 }} className="ht-panel">
+            <div style={glassCard(14, { display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16, fontSize: 13 })} className="ht-panel">
               <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Карьера</span><span style={{ fontWeight: 700 }}>{profileStats.points} очков за {profileStats.gp} игр</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Г/П</span><span style={{ fontWeight: 700 }}>{profileStats.goals}/{profileStats.assists}</span></div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: PALETTE.iceDim }}>Очков/игру</span><span style={{ fontWeight: 700 }}>{profileStats.ppg.toFixed(2)}</span></div>
@@ -2126,7 +2281,7 @@ export default function HockeyTracker() {
               })()}
             </div>
 
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }} className="ht-panel">
+            <div style={glassCard(14, { marginBottom: 16 })} className="ht-panel">
               <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>Цели на сезон {currentSeason}</div>
 
               {setGoalMetrics.length === 0 && !addingGoal && (
@@ -2142,7 +2297,7 @@ export default function HockeyTracker() {
                   <div key={metric} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
                       <span style={{ color: PALETTE.iceDim }}>{current} из {target} {label}</span>
-                      <button onClick={() => setConfirmDeleteGoal(metric)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
+                      <button aria-label="Удалить цель" onClick={() => setConfirmDeleteGoal(metric)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
                     </div>
                     <div style={{ height: 8, borderRadius: 4, background: PALETTE.panelLine, overflow: 'hidden' }}>
                       <div style={{ width: `${Math.min(100, (current / target) * 100)}%`, height: '100%', background: done ? PALETTE.teal : PALETTE.gold }} />
@@ -2173,7 +2328,7 @@ export default function HockeyTracker() {
                     </select>
                     <button
                       onClick={handleSetGoal}
-                      style={{ background: PALETTE.red, border: 'none', color: PALETTE.ice, borderRadius: 4, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
+                      style={primaryButtonStyle({ minHeight: 'auto', padding: '8px 14px', flexShrink: 0 })}
                     >
                       Задать
                     </button>
@@ -2196,7 +2351,7 @@ export default function HockeyTracker() {
             </div>
 
             {profileSeasonHistory.length > 0 && (
-              <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+              <div style={glassCard(14, { marginBottom: 16 })}>
                 <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 8 }}>Очки по сезонам</div>
                 <ResponsiveContainer width="100%" height={160}>
                   <BarChart data={profileSeasonHistory} margin={{ left: -10, right: 10 }}>
@@ -2259,7 +2414,7 @@ export default function HockeyTracker() {
               const pieData = breakdown.map((c) => ({ name: c.category.name, value: c[profilePieMetric] })).filter((d) => d.value > 0);
               const pieTotal = pieData.reduce((sum, d) => sum + d.value, 0);
               return (
-                <div className="ht-panel" style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, padding: 14, marginBottom: 16 }}>
+                <div className="ht-panel" style={glassCard(14, { marginBottom: 16 })}>
                   <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 14, marginBottom: 10 }}>По категориям (за всё время)</div>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
                     {Object.entries(metricLabels).map(([key, label]) => (
@@ -2306,7 +2461,7 @@ export default function HockeyTracker() {
               );
             })()}
 
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+            <div style={glassCard(0, { overflow: 'hidden' })}>
               <div className="ht-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px', fontSize: 12, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}` }}>
                 <span>Последние игры</span>
                 <button
@@ -2345,7 +2500,7 @@ export default function HockeyTracker() {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 18, fontWeight: 600 }}>Все игры — {profilePlayer}</div>
-              <button onClick={() => setShowAllGames(false)} style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', padding: 4 }}><X size={18} /></button>
+              <button onClick={() => setShowAllGames(false)} aria-label="Закрыть список игр" style={{ background: 'none', border: 'none', color: PALETTE.iceDim, cursor: 'pointer', padding: 4 }}><X size={18} /></button>
             </div>
 
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
@@ -2372,7 +2527,7 @@ export default function HockeyTracker() {
 
             <div style={{ fontSize: 12, color: PALETTE.iceDim, marginBottom: 8 }}>Всего игр: {allGamesList.length}</div>
 
-            <div style={{ background: PALETTE.panel, border: `1px solid ${PALETTE.panelLine}`, borderRadius: 4, overflow: 'hidden' }}>
+            <div style={glassCard(0, { overflow: 'hidden' })}>
               <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                 <div className="ht-row" style={{ display: 'flex', gap: 10, padding: '8px 14px', fontSize: 11, color: PALETTE.iceDim, borderBottom: `1px solid ${PALETTE.panelLine}`, minWidth: 'max-content' }}>
                   <span style={{ width: 78, flexShrink: 0 }}>Дата</span>
