@@ -1188,6 +1188,14 @@ export default function HockeyTracker() {
           box-shadow: 0 20px 60px rgba(0,0,0,0.45);
         }
 
+        /* Overlay fade-in + modal box scale/slide-in on mount. */
+        @keyframes ht-fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes ht-scale-in { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes ht-tab-fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .ht-overlay { animation: ht-fade-in 180ms ease; }
+        .ht-overlay .ht-modal-box { animation: ht-scale-in 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+        .ht-tab-content { animation: ht-tab-fade-in 200ms ease; }
+
         /* Tabs: segmented pill control */
         .ht-tab-btn { transition: color 200ms ease, background 200ms ease, box-shadow 200ms ease; border-radius: 9px; }
         .ht-tab-btn:not(.ht-tab-btn-active):hover { color: ${PALETTE.ice}; background: rgba(255,255,255,0.07); }
@@ -1324,6 +1332,7 @@ export default function HockeyTracker() {
           </div>
         )}
 
+        <div key={tab} className="ht-tab-content">
         {tab === 'dashboard' && (
           <div>
             <div className="ht-panel" style={glassCard(16, { marginBottom: 16 })}>
@@ -2018,6 +2027,7 @@ export default function HockeyTracker() {
             </div>
           </div>
         )}
+        </div>
 
         <div style={{ marginTop: 20, fontSize: 12, color: PALETTE.iceDim, textAlign: 'center' }}>
           Данные общие: их видят и могут дополнять все, у кого есть ссылка на это приложение.
@@ -2027,6 +2037,7 @@ export default function HockeyTracker() {
       {entryToDelete && (
         <div
           onClick={() => setConfirmDeleteId(null)}
+          className="ht-overlay"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
             alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 50,
@@ -2063,6 +2074,7 @@ export default function HockeyTracker() {
       {confirmDeleteGoal && (
         <div
           onClick={() => setConfirmDeleteGoal(null)}
+          className="ht-overlay"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.7)', display: 'flex',
             alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 60,
@@ -2098,6 +2110,7 @@ export default function HockeyTracker() {
       {profilePlayer && profileStats && (
         <div
           onClick={() => setProfilePlayer(null)}
+          className="ht-overlay"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.75)', display: 'flex',
             alignItems: 'flex-start', justifyContent: 'center', padding: 20, zIndex: 50, overflowY: 'auto',
@@ -2488,6 +2501,7 @@ export default function HockeyTracker() {
       {showAllGames && profilePlayer && (
         <div
           onClick={() => setShowAllGames(false)}
+          className="ht-overlay"
           style={{
             position: 'fixed', inset: 0, background: 'rgba(7,21,34,0.75)', display: 'flex',
             alignItems: 'flex-start', justifyContent: 'center', padding: 20, zIndex: 70, overflowY: 'auto',
