@@ -886,7 +886,8 @@ export default function HockeyTracker() {
     () => (currentSeason ? buildTotalsBar(countableEntries, activePlayers, currentSeason) : []),
     [countableEntries, activePlayers, currentSeason],
   );
-  const seasonGP = new Set(seasonEntries.map((e) => e.matchId)).size;
+  const seasonGP = new Set(seasonCountableEntries.map((e) => e.matchId)).size;
+  const seasonPracticeGP = new Set(seasonEntries.filter((e) => !isCountableEntry(e)).map((e) => e.matchId)).size;
   const leader = seasonStats.leaderboard.find((p) => p.gp > 0);
   const recentEntries = [...seasonEntries].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   const matchesForDate = useMemo(
@@ -1283,6 +1284,9 @@ export default function HockeyTracker() {
             <div className="ht-hero-seg" style={{ flex: 1, padding: '18px 20px', minWidth: 0 }}>
               <div style={{ fontSize: 11, letterSpacing: 0.3, color: PALETTE.iceDim, marginBottom: 6, textTransform: 'uppercase' }}>Игр сыграно</div>
               <div className="ht-hero-num" style={{ fontFamily: 'Oswald, sans-serif', fontSize: 30, fontWeight: 700, ...gradientText(PALETTE.ice, '#a9c3d8') }}>{seasonGP}</div>
+              {seasonPracticeGP > 0 && (
+                <div style={{ fontSize: 12, color: PALETTE.iceDim, marginTop: 2 }}>Тренировок: {seasonPracticeGP}</div>
+              )}
             </div>
           </div>
           <div className="ht-hero-seg" style={{ padding: '18px 20px' }}>
@@ -2026,7 +2030,7 @@ export default function HockeyTracker() {
                       <Avatar name={e.player} color={colorFor(e.player)} size={24} />
                       <span style={{ fontWeight: 600, color: PALETTE.ice }}>{e.player}</span>
                     </button>
-                    <span style={{ flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                    {isCountableEntry(e) && <span style={{ flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: '1 1 auto', minWidth: 0 }}>
                     <span style={{ flex: 1, color: PALETTE.iceDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{matchLabel(e.matchId)}</span>
@@ -2060,7 +2064,7 @@ export default function HockeyTracker() {
           >
             <div style={{ fontFamily: 'Oswald, sans-serif', fontSize: 17, fontWeight: 600, marginBottom: 10 }}>Удалить запись?</div>
             <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 4 }}>
-              {fmtDate(entryToDelete.date)} · {entryToDelete.player} · {entryToDelete.goals}Г {entryToDelete.assists}П
+              {fmtDate(entryToDelete.date)} · {entryToDelete.player}{isCountableEntry(entryToDelete) ? ` · ${entryToDelete.goals}Г ${entryToDelete.assists}П` : ''}
             </div>
             <div style={{ fontSize: 13, color: PALETTE.iceDim, marginBottom: 18 }}>{matchLabel(entryToDelete.matchId)}</div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
@@ -2498,7 +2502,7 @@ export default function HockeyTracker() {
                 {profileRecent.map((e) => (
                   <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13, minWidth: 'max-content' }}>
                     <span style={{ color: PALETTE.iceDim, width: 78, flexShrink: 0 }}>{fmtDate(e.date)}</span>
-                    <span style={{ width: 90, flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                    <span style={{ width: 90, flexShrink: 0 }}>{isCountableEntry(e) ? `${e.goals}Г ${e.assists}П` : '—'}</span>
                     <span style={{ color: PALETTE.iceDim, whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
                   </div>
                 ))}
@@ -2565,7 +2569,7 @@ export default function HockeyTracker() {
                   return (
                     <div className="ht-row" key={e.id} style={{ display: 'flex', gap: 10, padding: '8px 14px', borderBottom: `1px solid ${PALETTE.panelLine}`, fontSize: 13, minWidth: 'max-content' }}>
                       <span style={{ color: PALETTE.iceDim, width: 78, flexShrink: 0 }}>{fmtDate(e.date)}</span>
-                      <span style={{ width: 90, flexShrink: 0 }}>{e.goals}Г {e.assists}П</span>
+                      <span style={{ width: 90, flexShrink: 0 }}>{cat?.countsStats !== false ? `${e.goals}Г ${e.assists}П` : '—'}</span>
                       <span style={{ color: PALETTE.iceDim, width: 140, flexShrink: 0 }}>{cat?.name || '—'}</span>
                       <span style={{ color: PALETTE.iceDim, whiteSpace: 'nowrap' }}>{matchLabel(e.matchId)}</span>
                     </div>
