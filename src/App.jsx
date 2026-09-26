@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, PieChart, Pie, Cell,
@@ -763,7 +763,7 @@ export default function HockeyTracker() {
       await persistEntries([...entries, entry]);
       await insertEntryRow(entry);
       setForm({
-        ...form, goals: '', assists: '', matchChoice: '__new__',
+        ...form, goals: '', assists: '', matchChoice: matchId,
         ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '',
         tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '',
       });
@@ -893,6 +893,16 @@ export default function HockeyTracker() {
     () => matches.filter((m) => m.date === form.date && m.categoryId === form.categoryId),
     [matches, form.date, form.categoryId],
   );
+  // If someone already logged this category on this date, default to that match instead of
+  // "+ своя игра" — otherwise the next person to log the same session creates a duplicate match.
+  const resolveMatchChoice = (dateVal, categoryId) => matches.find((m) => m.date === dateVal && m.categoryId === categoryId)?.id || '__new__';
+  const initialMatchSyncDone = useRef(false);
+  useEffect(() => {
+    if (!loading && !initialMatchSyncDone.current) {
+      initialMatchSyncDone.current = true;
+      setForm((f) => (f.matchChoice === '__new__' ? { ...f, matchChoice: resolveMatchChoice(f.date, f.categoryId) } : f));
+    }
+  }, [loading]);
   const categoryBreakdown = useMemo(() => {
     const byCat = {};
     categories.forEach((c) => { byCat[c.id] = { category: c, games: new Set(), goals: 0, assists: 0, points: 0 }; });
@@ -1759,7 +1769,7 @@ export default function HockeyTracker() {
                   <label style={{ fontSize: 11, color: PALETTE.iceDim, display: 'block', marginBottom: 4 }}>Дата</label>
                   <input
                     type="date" value={form.date}
-                    onChange={(ev) => setForm({ ...form, date: ev.target.value, matchChoice: '__new__', ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' })}
+                    onChange={(ev) => { const nextDate = ev.target.value; setForm({ ...form, date: nextDate, matchChoice: resolveMatchChoice(nextDate, form.categoryId), ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' }); }}
                     className="ht-form-input" style={inputStyle()}
                   />
                 </div>
@@ -1772,7 +1782,7 @@ export default function HockeyTracker() {
                     value={form.categoryId}
                     onChange={(ev) => (ev.target.value === '__newcat__'
                       ? setNewCategoryMode(true)
-                      : setForm({ ...form, categoryId: ev.target.value, matchChoice: '__new__', ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' }))}
+                      : setForm({ ...form, categoryId: ev.target.value, matchChoice: resolveMatchChoice(form.date, ev.target.value), ownTeamChoice: '', newOwnTeamName: '', opponentTeamChoice: '', newOpponentTeamName: '', tournamentChoice: '', newTournamentName: '', stage: '', scoreOwn: '', scoreOpp: '', finish: '' }))}
                     className="ht-form-input" style={inputStyle()}
                   >
                     {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
